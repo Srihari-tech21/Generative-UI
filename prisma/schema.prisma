@@ -1,0 +1,19 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Generation {
+  id            String   @id @default(cuid())
+  userId        String   // Clerk user ID
+  prompt        String   // original NL request
+  title         String   // e.g. "Startup Burn Rate & Financials"
+  schemaJson    Json     // validated UI Schema JSON
+  usedFallback  Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
