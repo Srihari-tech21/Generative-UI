@@ -2,7 +2,14 @@ import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import pg from 'pg';
 
-const connectionString = process.env.DATABASE_URL || "postgresql://localhost:5432/db";
+if (!process.env.DATABASE_URL) {
+  throw new Error(
+    'Missing DATABASE_URL environment variable. ' +
+    'Set it in .env.local for development or in your Vercel project settings for production.'
+  );
+}
+
+const connectionString = process.env.DATABASE_URL;
 
 const pool = new pg.Pool({ connectionString });
 const adapter = new PrismaPg(pool);
@@ -13,7 +20,7 @@ export const prisma =
   globalForPrisma.prisma ||
   new PrismaClient({
     adapter,
-    log: ['query'],
+    log: process.env.NODE_ENV === 'development' ? ['query'] : [],
   });
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
