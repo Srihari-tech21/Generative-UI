@@ -158,7 +158,7 @@ Copy and paste any of these into the prompt box:
 
 ## Team & Hackathon
 
-> Built by **[Team Name]** for **[Hackathon Name]**, [Date].
+> Built by **[AEVIXA]** for **[INNOGENESIS]**, [7TH - 8TH AUGUST].
 
 <!-- TODO: Fill in team name, hackathon name, and date before submitting -->
 
