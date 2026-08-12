@@ -128,7 +128,7 @@ npx prisma migrate dev
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [https://generative-ui-orpin.vercel.app/](https://generative-ui-orpin.vercel.app/) in your browser.
 
 > **Offline/demo mode:** Set `OFFLINE_MODE=true` in your `.env.local` to skip live AI calls entirely. The app will serve pre-validated example dashboards for each domain instantly — useful for demoing without network or API key dependency.
 
