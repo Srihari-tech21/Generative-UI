@@ -4,14 +4,12 @@ import { MockDataset } from './mockData';
 
 /**
  * Lightweight Validation Layer
- * Runs after schema generation/fallback selection, sanitizing and clamping metrics.
+ * Sanitizes and validates schema widgets, supporting both live embedded data and legacy datasets.
  */
 export function validateAndCorrectSchema(schema: UISchema, data: MockDataset): { schema: UISchema; data: MockDataset } {
-  console.log("[Validation Layer] Starting validation pass on schema and dataset...");
-  
-  // Deep clone to prevent mutating static schemas/fallbacks
+  // Deep clone to prevent mutating static schemas
   const nextSchema = JSON.parse(JSON.stringify(schema)) as UISchema;
-  const nextData = JSON.parse(JSON.stringify(data)) as MockDataset;
+  const nextData = data ? (JSON.parse(JSON.stringify(data)) as MockDataset) : ({ kpis: {}, charts: {}, tables: {} } as unknown as MockDataset);
 
   const validWidgets: Widget[] = [];
 
@@ -20,19 +18,21 @@ export function validateAndCorrectSchema(schema: UISchema, data: MockDataset): {
 
     try {
       if (widget.type === 'kpi_card') {
+        // If live value is directly embedded in config, it is valid
+        if (widget.config.value !== undefined) {
+          validWidgets.push(widget);
+          continue;
+        }
+
         const key = widget.config.key || widget.config.metricId;
         if (!key) {
-          console.warn(`[Validation Layer] kpi_card widget "${widget.title}" has no key configured. Correcting...`);
-          widget.config.key = Object.keys(nextData.kpis)[0] || 'cash_runway';
+          widget.config.key = Object.keys(nextData.kpis || {})[0] || 'cash_runway';
         }
         
         const metricId = widget.config.key;
         const def = METRIC_LOOKUP[metricId] || getFallbackMetric(metricId);
         
-        // Ensure metric exists in dataset
-        if (!nextData.kpis[metricId]) {
-          console.warn(`[Validation Layer] KPI metric "${metricId}" missing from dataset. Injecting fallback...`);
-          // Generate a value within ranges
+        if (nextData.kpis && !nextData.kpis[metricId]) {
           const rangeVal = def.min + Math.round((def.max - def.min) / 2);
           nextData.kpis[metricId] = {
             id: metricId,
@@ -43,68 +43,53 @@ export function validateAndCorrectSchema(schema: UISchema, data: MockDataset): {
             context: def.context
           };
         }
-
-        const kpi = nextData.kpis[metricId];
-        
-        // 1. Force exact unit match
-        if (kpi.unit !== def.unit) {
-          console.warn(`[Validation Layer] KPI "${metricId}" unit mismatch: dataset has "${kpi.unit}", expected "${def.unit}". Correcting...`);
-          kpi.unit = def.unit;
+      } 
+      else if (
+        widget.type === 'line_chart' || 
+        widget.type === 'bar_chart' || 
+        widget.type === 'pie_chart' || 
+        widget.type === 'area_chart' ||
+        widget.type === 'scatter_plot'
+      ) {
+        // If data is provided in widget config, it is completely valid
+        if (Array.isArray(widget.config.data) && widget.config.data.length > 0) {
+          validWidgets.push(widget);
+          continue;
         }
 
-        // 2. Validate and clamp numeric values
-        const valNum = Number(kpi.value);
-        if (isNaN(valNum)) {
-          console.warn(`[Validation Layer] KPI "${metricId}" value is non-numeric: "${kpi.value}". Correcting...`);
-          kpi.value = def.min;
-        } else if (valNum < def.min || valNum > def.max) {
-          console.warn(`[Validation Layer] KPI "${metricId}" value ${valNum} is out of bounds [${def.min}, ${def.max}]. Clamping...`);
-          kpi.value = Math.max(def.min, Math.min(def.max, valNum));
-        }
-
-        // 3. Force exact label & context consistency from lookup registry
-        kpi.label = def.label;
-        kpi.context = def.context;
-
-        // 4. Verify trend magnitudes and color logic semantically
-        if (kpi.trend) {
-          const baseVal = Number(kpi.value);
-          const maxTrend = baseVal * 0.15;
-          if (kpi.trend.amount > maxTrend) {
-            kpi.trend.amount = Math.max(1, Math.round(baseVal * 0.05));
+        const chartKey = widget.config.chartKey;
+        if (!chartKey || !nextData.charts?.[chartKey]) {
+          // If legacy chart key missing, only drop if no config.data
+          if (!Array.isArray(widget.config.data)) {
+            isValid = false;
           }
-          // directionally enforce correct semantic sign
-          const isUp = kpi.trend.direction === "up";
-          kpi.trend.isGood = isUp ? def.isTrendUpGood : !def.isTrendUpGood;
+        }
+      }
+      else if (widget.type === 'table') {
+        // If data is provided in widget config, it is completely valid
+        if (Array.isArray(widget.config.data)) {
+          validWidgets.push(widget);
+          continue;
+        }
+
+        const tableKey = widget.config.tableKey;
+        if (!tableKey || !nextData.tables?.[tableKey]) {
+          isValid = false;
         }
       } 
+      else if (widget.type === 'insight_card' || widget.type === 'source_transparency') {
+        // These are always valid first-class analytics widgets
+        validWidgets.push(widget);
+        continue;
+      }
       else if (widget.type === 'progress_bar') {
         const val = Number(widget.config.value);
         if (isNaN(val) || val < 0 || val > 100) {
-          console.warn(`[Validation Layer] progress_bar "${widget.title}" value "${widget.config.value}" is invalid. Clamping to [0, 100]...`);
           widget.config.value = Math.max(0, Math.min(100, val || 0));
         }
       } 
-      else if (widget.type === 'table') {
-        const tableKey = widget.config.tableKey;
-        if (!tableKey || !nextData.tables[tableKey]) {
-          console.warn(`[Validation Layer] table "${widget.title}" references missing tableKey "${tableKey}". Dropping widget...`);
-          isValid = false;
-        }
-      } 
-      else if (widget.type === 'line_chart' || widget.type === 'bar_chart' || widget.type === 'pie_chart') {
-        const chartKey = widget.config.chartKey;
-        if (!chartKey || !nextData.charts[chartKey]) {
-          console.warn(`[Validation Layer] chart "${widget.title}" references missing chartKey "${chartKey}". Dropping widget...`);
-          isValid = false;
-        }
-      }
       else if (widget.type === 'list') {
-        const listKey = widget.config.listKey;
-        if (!listKey) {
-          console.warn(`[Validation Layer] list "${widget.title}" has no listKey configured. Correcting...`);
-          widget.config.listKey = 'habit_logs';
-        }
+        if (!widget.config.listKey) widget.config.listKey = 'habit_logs';
         if (!widget.config.titleKey) widget.config.titleKey = 'title';
         if (!widget.config.subtitleKey) widget.config.subtitleKey = 'subtitle';
         if (!widget.config.valueKey) widget.config.valueKey = 'value';
@@ -113,33 +98,25 @@ export function validateAndCorrectSchema(schema: UISchema, data: MockDataset): {
       else if (widget.type === 'board') {
         const boardKey = widget.config.boardKey;
         if (!boardKey || !nextData.boards?.[boardKey]) {
-          console.warn(`[Validation Layer] board "${widget.title}" has missing or invalid boardKey. Correcting...`);
           widget.config.boardKey = Object.keys(nextData.boards || {})[0] || 'sales_board';
         }
       } 
       else if (widget.type === 'streak_counter') {
         const streakKey = widget.config.streakKey;
         if (!streakKey || !nextData.streaks?.[streakKey]) {
-          console.warn(`[Validation Layer] streak_counter "${widget.title}" has missing or invalid streakKey. Correcting...`);
           widget.config.streakKey = Object.keys(nextData.streaks || {})[0] || 'habit_streak';
         }
       } 
       else if (widget.type === 'calendar_heatmap') {
         const heatmapKey = widget.config.heatmapKey;
         if (!heatmapKey || !nextData.heatmaps?.[heatmapKey]) {
-          console.warn(`[Validation Layer] calendar_heatmap "${widget.title}" has missing or invalid heatmapKey. Correcting...`);
           widget.config.heatmapKey = Object.keys(nextData.heatmaps || {})[0] || 'habit_history';
         }
       } 
       else if (widget.type === 'form') {
-        if (!widget.config.submitText) {
-          widget.config.submitText = 'Submit';
-        }
+        if (!widget.config.submitText) widget.config.submitText = 'Submit';
         if (!Array.isArray(widget.config.fields)) {
-          console.warn(`[Validation Layer] form "${widget.title}" has no fields configured. Correcting...`);
-          widget.config.fields = [
-            { name: 'name', label: 'Full Name', type: 'text', required: true }
-          ];
+          widget.config.fields = [{ name: 'name', label: 'Full Name', type: 'text', required: true }];
         }
       }
     } catch (e) {

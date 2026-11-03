@@ -4,25 +4,82 @@
 
 :root {
   --background: #f8fafc;
-  --foreground: #0f172a;
+  --foreground: #111827;
+  --heading-main: #111827;
+  --heading-section: #172033;
+  --text-body: #374151;
+  --text-secondary: #4b5563;
+  --text-muted: #64748b;
+  --surface-main: #ffffff;
+  --surface-secondary: #f8fafc;
+  --surface-input: #f1f5f9;
+  --border-subtle: #cbd5e1;
+  --border-hover: #84cc16;
+  --accent-lime: #4d7c0f;
+  --accent-lime-bright: #84cc16;
+}
+
+.dark {
+  --background: #080a0f;
+  --foreground: #f1f5f9;
+  --heading-main: #ffffff;
+  --heading-section: #f1f5f9;
+  --text-body: #cbd5e1;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --surface-main: #0d1017;
+  --surface-secondary: #141824;
+  --surface-input: #080a0f;
+  --border-subtle: #1e2533;
+  --border-hover: #2c3548;
+  --accent-lime: #84cc16;
+  --accent-lime-bright: #a3e635;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-hover: var(--border-hover);
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
+
+/* Crisp subtle custom scrollbar for dashboards and tables */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-hover);
+}
+
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(4px);
   }
   to {
     opacity: 1;
@@ -31,43 +88,94 @@ body {
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
+/* Subtle architectural grid pattern */
+.bg-grid-subtle {
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.035) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(0, 0, 0, 0.035) 1px, transparent 1px);
+  background-size: 32px 32px;
 }
 
-.shimmer {
-  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite linear;
+.dark .bg-grid-subtle {
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
 }
 
-.dark .shimmer {
-  background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite linear;
-}
-
-@keyframes gradientBG {
-  0% {
-    background-position: 0% 50%;
+/* 3D Ecosystem Motion Keyframes */
+@keyframes ecosystemFloat {
+  0%, 100% {
+    transform: translateY(0px) rotateX(8deg) rotateY(-4deg);
   }
   50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
+    transform: translateY(-14px) rotateX(6deg) rotateY(4deg);
   }
 }
 
-.animate-gradient-bg {
-  background-size: 200% 200%;
-  animation: gradientBG 15s ease infinite;
+@keyframes processorPulse {
+  0%, 100% {
+    opacity: 0.35;
+    transform: translate(-50%, -50%) scale(0.96);
+  }
+  50% {
+    opacity: 0.75;
+    transform: translate(-50%, -50%) scale(1.10);
+  }
 }
+
+@keyframes conduitFlow {
+  0% {
+    stroke-dashoffset: 320;
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.9;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0.25;
+  }
+}
+
+@keyframes beaconPing {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.25);
+  }
+}
+
+.animate-ecosystem-float {
+  animation: ecosystemFloat 14s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.animate-processor-pulse {
+  animation: processorPulse 3.8s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.animate-conduit-flow {
+  animation: conduitFlow 4.5s linear infinite;
+}
+
+.animate-beacon-ping {
+  animation: beaconPing 2.6s ease-in-out infinite;
+}
+
+/* Accessibility: Reduced motion mode */
+@media (prefers-reduced-motion: reduce) {
+  .animate-ecosystem-float,
+  .animate-processor-pulse,
+  .animate-conduit-flow,
+  .animate-beacon-ping {
+    animation: none !important;
+    will-change: auto !important;
+  }
+}
+

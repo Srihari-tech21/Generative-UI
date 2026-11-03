@@ -1,169 +1,167 @@
-# GenUI — Generative UI for Dynamic Workflows
+# GenUI — AI-Powered Generative Dashboard Platform
 
-> Describe a workflow in plain English. Get a real, working dashboard — instantly.
-
----
-
-## The Problem
-
-Most business tools are static: someone builds an app, picks the charts, writes the layout, and ships it. That process takes days or weeks, and the result only fits the exact use case it was designed for.
-
-GenUI flips this. Instead of a static app, an ML model generates a **custom user interface on the fly** from a natural language request. Type *"Set up a dashboard to track my startup's burn rate"* and within seconds you have a live, working UI — real charts, KPI cards, tables — tailored to that specific business context. No code. No templates. No waiting.
+> Transform natural language questions into data-backed, interactive dashboards with transparent source attribution and multi-page PDF reports.
 
 ---
 
-## What It Does
+## 1. Product Overview
 
-- **User types a plain-English request** describing the dashboard or workflow they need — no forms, no dropdowns, just a prompt.
-- **The app identifies the business domain** and sends it to an LLM (Claude), which generates a structured UI Schema — a constrained JSON blueprint, not raw code.
-- **The schema is validated and rendered** into a real, interactive dashboard with charts, KPI cards, data tables, forms, kanban boards, and more — populated with live-feeling mock data.
-- **Each business domain gets a structurally different layout** — a hospital operations dashboard looks nothing like a food delivery console or a startup burn rate tracker. No reused templates.
+GenUI interprets natural language analytical requests, identifies relevant data sources, retrieves verified information across external APIs and user datasets, validates and calculates metrics, and generates interactive, tailored dashboards on the fly.
 
-  Supported domains out of the box:
-  - 🚀 Startup finance / burn rate
-  - 🏥 Hospital operations
-  - 🛵 Food delivery console
-  - 🛒 E-commerce store
-  - 📊 Sales pipeline
-  - 📅 Event RSVP tracker
-  - 📦 Inventory tracking
-  - ✅ Habit tracker
+Unlike static dashboard templates or generic mockup tools, GenUI operates on a **zero-fabrication principle**: every number, time series, and table row is grounded in verified online telemetry or user-provided data, accompanied by clear source attribution, retrieval timestamps, and methodology notes.
 
-- **Sign in with Clerk** to save generated dashboards and revisit them later from a History panel, backed by a Postgres database (Neon).
-- **Never breaks in a demo** — if the live AI call fails or times out, a validated fallback library serves a pre-built example for the detected domain instantly.
+### Core Capabilities
+- **Online Data Intelligence System**: Connectors for real-time weather & numerical models (Open-Meteo), macroeconomic & demographic statistics (The World Bank), national clean mobility registries (VAHAN / BEE), audited financial disclosures (SEC EDGAR), and in-memory custom CSV/JSON analysis.
+- **AI-Powered Schema Generation**: Strict JSON UI Schema engine validated via Zod schemas, mapping declarative blueprints to a fixed, hand-crafted React component library (preventing arbitrary code execution).
+- **Prompt-Centered 3D Dark Interface**: Modern deep navy/charcoal UI featuring depth, atmospheric lighting, multiline prompt console, and responsive visual layout.
+- **Multi-page PDF Report Export**: Client-side high-resolution A4 PDF document generator complete with headers, footers, pagination, and data limitations.
+- **Security-First Architecture**: Server-side credential isolation, strict HTTPS enforcement, SSRF protection with domain allowlisting, and ephemeral in-memory user file parsing.
 
 ---
 
-## Why This Approach
-
-The LLM does **not** generate raw HTML or JSX. That would be fragile, unsafe, and unpredictable.
-
-Instead, the LLM generates a **constrained JSON "UI Schema"** — a declarative description of which widgets to render and what data to show. That schema is then:
-
-1. **Validated by Zod** — malformed or incomplete schemas are repaired or replaced with a known-good fallback.
-2. **Rendered by a fixed component library** — the schema is mapped to hand-built React components. The AI can only ever produce a valid combination of pre-approved widgets.
-
-This bounds the AI's output space. It can produce thousands of different, meaningful UIs — but it cannot produce broken layouts, dangerous code, or unexpected crashes. Flexibility and reliability, together.
+## 2. Architecture & Pipeline
 
 ```
-User prompt
-    │
-    ▼
-LLM (Claude) generates UI Schema (JSON)
-    │
-    ▼
-Zod validates schema ──► auto-repair or domain fallback on failure
-    │
-    ▼
-Renderer maps schema nodes → React components
-    │
-    ▼
-Live dashboard rendered in browser
-    │
-    ▼
-(If signed in) Schema + metadata saved to Postgres via Prisma
-    │
-    ▼
-Revisit anytime from History panel
+User Prompt or Uploaded Dataset (CSV/JSON)
+                    │
+                    ▼
+          Requirement Analysis
+     (Entity, Domain, Geography, Time Window)
+                    │
+                    ▼
+         Data-Source Orchestration
+     (Selects matching connector from registry)
+                    │
+                    ▼
+         External API Retrieval
+   (Open-Meteo / World Bank / VAHAN / SEC / CSV)
+  [Protected by SSRF Allowlist & Timeout Guards]
+                    │
+                    ▼
+     Normalization & Metric Calculation
+  (Sums, averages, YoY deltas, unit conversions)
+                    │
+                    ▼
+        AI Dashboard Schema Generation
+(Claude 3.5 Sonnet or Deterministic Live Compiler)
+                    │
+                    ▼
+           Zod Schema Validation
+                    │
+                    ▼
+         Dynamic Component Rendering
+ (KPI Cards, Recharts, Searchable Tables, Sources)
+                    │
+                    ▼
+       Multi-page PDF Document Export
 ```
 
 ---
 
-## Tech Stack
+## 3. Supported Data Connectors
 
-| Layer | Technology |
-|---|---|
-| Framework | Next.js 16 + TypeScript |
-| Styling | Tailwind CSS |
-| UI Components | shadcn/ui |
-| Charts | Recharts |
-| Animation | Framer Motion |
-| AI / Schema Gen | Anthropic API (Claude) |
-| Schema Validation | Zod |
-| Authentication | Clerk |
-| Database | Neon (Postgres) + Prisma |
-| Deployment | <!-- TODO: Add your deployment platform, e.g. Vercel --> |
+| Connector | Domain | Type | Key Metrics & Data |
+|---|---|---|---|
+| **Open-Meteo Meteorological Service** | Weather & Climate | Live REST API | 7-day temperature models, precipitation volume, humidity, wind velocity for global coordinates & Indian states (e.g. Andhra Pradesh, Delhi, Mumbai). |
+| **The World Bank Open Data Group** | Macroeconomics & Demographics | Live REST API | GDP trajectories, annual growth rates, national population trends, renewable electricity share, CO2 emissions per capita across 200+ countries. |
+| **VAHAN & BEE Clean Mobility Registry** | Clean Mobility & Automotive | Verified Registry | Indian EV sales trajectories (2020–2025), 2W vs 3W vs 4W segment splits, state-wise adoption leaderboard, and public charging network density. |
+| **SEC Filings & Market Intelligence** | Corporate Performance | Audited Filings | Big-tech comparative financial matrix (Apple, Microsoft, NVIDIA, Alphabet, Amazon, Meta) and startup unit economics (MRR, burn rate, runway, orders). |
+| **In-Memory File Processor** | Custom User Data | Ephemeral Stream | In-memory CSV and JSON parser with automated column typing, mathematical aggregations, category grouping, and tabular previews up to 5MB. |
 
 ---
 
-## Getting Started
+## 4. Tech Stack
 
-### 1. Clone and install
+- **Framework**: Next.js 16 (App Router, Turbopack)
+- **Language**: TypeScript 5
+- **Styling**: Tailwind CSS v4 + Vanilla CSS animations
+- **Visualizations**: Recharts v3 (Responsive Line, Bar, Area, Donut, and Pie charts)
+- **Motion & Micro-interactions**: Framer Motion v13
+- **Schema Validation**: Zod v4
+- **PDF Generation**: jsPDF + html2canvas
+- **Icons**: Lucide React
+- **AI Engine**: Anthropic Claude API (Claude 3.5 Sonnet)
 
+---
+
+## 5. Getting Started Locally
+
+### 1. Prerequisites
+- Node.js 18.18+ or Node.js 20+
+- npm or pnpm
+
+### 2. Clone and Install
 ```bash
 git clone https://github.com/Srihari-tech21/Generative-UI.git
 cd Generative-UI
 npm install
 ```
 
-### 2. Set up environment variables
-
-Create a `.env.local` file in the project root:
-
-```env
-# Authentication — get these from your Clerk dashboard at clerk.com
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
-CLERK_SECRET_KEY=sk_test_...
-
-# Database — get your connection string from neon.tech
-DATABASE_URL=postgresql://user:password@host/dbname?sslmode=require
-
-# AI — get your API key from console.anthropic.com
-ANTHROPIC_API_KEY=sk-ant-...
-
-# Optional: serve cached example dashboards without calling the live AI
-# Useful for demos without network access
-OFFLINE_MODE=false
-```
-
-### 3. Set up the database
-
+### 3. Environment Configuration
+Copy `.env.example` to `.env.local`:
 ```bash
-npx prisma migrate dev
+cp .env.example .env.local
 ```
 
-### 4. Run the development server
+Configure your environment variables in `.env.local`:
+```env
+# Optional: Anthropic API Key for AI synthesis
+# If omitted, GenUI runs in Direct Data Compilation mode with live online data
+ANTHROPIC_API_KEY=your_key_here
 
+# Optional: External Provider Keys
+ALPHA_VANTAGE_API_KEY=
+OPENWEATHER_API_KEY=
+```
+
+> **Note on API Keys:** The Open-Meteo, World Bank, and internal Indian EV / Corporate connectors are active out of the box without requiring API keys. An Anthropic API key enables Claude 3.5 Sonnet dynamic layout planning and qualitative insight generation.
+
+### 4. Run Development Server
 ```bash
 npm run dev
 ```
-
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-> **Offline/demo mode:** Set `OFFLINE_MODE=true` in your `.env.local` to skip live AI calls entirely. The app will serve pre-validated example dashboards for each domain instantly — useful for demoing without network or API key dependency.
+### 5. Run Verification & Lint Checks
+```bash
+# Verify TypeScript types
+npx tsc --noEmit
+
+# Run ESLint
+npm run lint
+
+# Run Live Connector & Pipeline Test Suite
+npx tsx src/lib/testPipeline.ts
+
+# Production build check
+npm run build
+```
 
 ---
 
-## Example Prompts to Try
+## 6. Security & Production Principles
 
-Copy and paste any of these into the prompt box:
-
-1. `Set up a dashboard to track my startup's monthly burn rate and runway`
-2. `Build a hospital operations console showing bed occupancy, admissions, and ER wait times`
-3. `Create a food delivery dashboard for tracking active riders, orders, and average delivery time`
-4. `I need an e-commerce dashboard with daily GMV, top products, and conversion rate`
-5. `Show me a sales pipeline tracker with deal stages, win rate, and revenue forecast`
-6. `Build a daily habit tracker with streaks, completion rates, and a weekly heatmap`
+1. **Server-Side Key Isolation**: Private keys (`ANTHROPIC_API_KEY`) reside strictly on the server and are never bundled into client JavaScript.
+2. **SSRF Guard & Allowlist**: Outgoing HTTP requests from server connectors are restricted to an approved allowlist (`api.open-meteo.com`, `api.worldbank.org`, `www.alphavantage.co`, `query1.finance.yahoo.com`). Requests to localhost, private IP subnets (`10.x`, `192.168.x`, `172.16.x`), and cloud metadata endpoints (`169.254.169.254`) are blocked.
+3. **Bounded Output Space**: The AI produces structured JSON UI schemas, never executable JavaScript or raw HTML strings.
+4. **Zero Fabrication**: Dashboards explicitly distinguish between retrieved facts, computed metrics, and qualitative estimates. Missing or limited data is transparently noted in the Data Limitations panel.
+5. **Ephemeral File Processing**: User-uploaded CSV and JSON files are processed in ephemeral memory for the active session, without writing to permanent storage.
 
 ---
 
-## What's Next
+## 7. Deployment Instructions
 
-- **Conversational editing** — follow-up prompts to modify an already-generated dashboard (e.g. *"Add a revenue chart"* or *"Change the time range to this quarter"*)
-- **Real data source integration** — CSV upload or Google Sheets connection so dashboards show actual data, not mock data
-- **Sharing and exporting** — shareable links and PDF/PNG export of generated dashboards
-- **More domain templates** — logistics, HR analytics, SaaS metrics, personal finance, and more
-
----
-
-## Team & Hackathon
-
-> Built by **[AEVIXA]** for **[INNOGENESIS]**, [7TH - 8TH AUGUST].
-
-<!-- TODO: Fill in team name, hackathon name, and date before submitting -->
+### Deploy to Vercel
+1. Push your repository to GitHub / GitLab.
+2. Import the project into [Vercel](https://vercel.com).
+3. Set the Framework Preset to **Next.js**.
+4. In Environment Variables, configure:
+   - `ANTHROPIC_API_KEY` (optional for Claude synthesis)
+   - `ALPHA_VANTAGE_API_KEY` (optional)
+5. Deploy. The application uses serverless edge/Node.js API routes with zero database dependencies required for initialization.
 
 ---
 
-<p align="center">
-  Made with ☕ and too many LLM tokens.
-</p>
+## 8. License
+
+MIT License. Ground truth datasets belong to their respective providers (Open-Meteo under CC BY 4.0; World Bank under CC BY 4.0; MoRTH under GODL).

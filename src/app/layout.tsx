@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
+import { ThemeProvider } from "@/context/ThemeContext";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -22,19 +23,55 @@ function isClerkConfigured(): boolean {
 }
 
 const bodyClass =
-  "antialiased bg-slate-50 text-slate-900 min-h-screen dark:bg-slate-950 dark:text-slate-100 flex flex-col font-sans";
+  "antialiased min-h-screen flex flex-col font-sans transition-colors duration-200 bg-[#f8fafc] text-slate-900 dark:bg-[#080a0f] dark:text-[#f1f5f9]";
+
+// Inline script to prevent theme flash before hydration
+const themeInitScript = `
+(function() {
+  try {
+    var saved = localStorage.getItem('genui-theme');
+    var isDark = true;
+    if (saved === 'light') {
+      isDark = false;
+    } else if (saved === 'system') {
+      isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    var root = document.documentElement;
+    if (isDark) {
+      root.classList.add('dark');
+      root.classList.remove('light');
+      root.style.colorScheme = 'dark';
+    } else {
+      root.classList.remove('dark');
+      root.classList.add('light');
+      root.style.colorScheme = 'light';
+    }
+  } catch (e) {
+    document.documentElement.classList.add('dark');
+  }
+})();
+`;
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const content = (
+    <ThemeProvider>
+      {children}
+    </ThemeProvider>
+  );
+
   if (isClerkConfigured()) {
     return (
       <ClerkProvider>
-        <html lang="en" className="h-full">
+        <html lang="en" className="h-full dark" suppressHydrationWarning>
+          <head>
+            <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+          </head>
           <body className={bodyClass}>
-            {children}
+            {content}
           </body>
         </html>
       </ClerkProvider>
@@ -42,11 +79,13 @@ export default function RootLayout({
   }
 
   // Anonymous / demo mode — Clerk is not configured, skip ClerkProvider entirely.
-  // The app renders fully; auth-dependent features show a "sign-in unavailable" state.
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className="h-full dark" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body className={bodyClass}>
-        {children}
+        {content}
       </body>
     </html>
   );
