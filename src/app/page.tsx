@@ -29,7 +29,8 @@ import {
   Lock,
   ExternalLink,
   Target,
-  Search
+  Search,
+  HelpCircle
 } from 'lucide-react';
 import { 
   ResponsiveContainer, 
@@ -49,8 +50,10 @@ import { useChartTheme } from '@/components/WidgetRenderers';
 
 import { UISchema } from '../types/schema';
 import { DynamicRenderer } from '../components/DynamicRenderer';
+import { IndustryDataHub } from '../components/IndustryDataHub';
 import { exportDashboardToPDF } from '../lib/pdfExport';
 import { downloadCSV } from '../lib/csvExport';
+import { StructuredGuidance, PipelineResponseState } from '../lib/dataSources/intentParser';
 
 const SUGGESTED_PROMPTS = [
   { text: "Analyze India's GDP growth and macro economic trajectory.", label: "India GDP Growth", domain: "World Bank Macro", icon: TrendingUp },
@@ -77,6 +80,10 @@ export default function GenUIPage() {
     provider?: string;
     generationMode?: string;
     aiStatus?: string;
+  } | null>(null);
+  const [guidance, setGuidance] = useState<{
+    state: PipelineResponseState;
+    info: StructuredGuidance;
   } | null>(null);
   const [sessionHistory, setSessionHistory] = useState<Array<{ prompt: string; schema: UISchema; timestamp: string }>>([]);
   const [historyOpen, setHistoryOpen] = useState(false);
@@ -136,16 +143,19 @@ export default function GenUIPage() {
   };
 
   // Main Dashboard Generation Function
-  const handleGenerate = async (queryText: string) => {
-    const targetQuery = queryText.trim();
-    if (!targetQuery && !uploadedFile) {
-      setErrorMessage('Please enter an analytical prompt or upload a CSV dataset.');
+  const handleGenerate = async (queryText?: string, explicitDatasetId?: string) => {
+    const targetQuery = (queryText !== undefined ? queryText : prompt).trim();
+    if (!targetQuery && !uploadedFile && !explicitDatasetId) {
+      setErrorMessage('Please enter an analytical prompt, select an industry dataset, or upload a CSV dataset.');
       return;
     }
 
     setIsLoading(true);
     setErrorMessage(null);
-    setActivePrompt(targetQuery || uploadedFile?.name || 'Dataset Ingestion');
+    setGuidance(null);
+    const displayPrompt = targetQuery || (explicitDatasetId ? `Analyze dataset: ${explicitDatasetId}` : (uploadedFile?.name || 'Dataset Ingestion'));
+    setActivePrompt(displayPrompt);
+    if (queryText !== undefined) setPrompt(queryText);
 
     try {
       const res = await fetch('/api/generate', {
@@ -154,17 +164,40 @@ export default function GenUIPage() {
         body: JSON.stringify({
           prompt: targetQuery,
           fileContent: uploadedFile?.content,
-          fileName: uploadedFile?.name
+          fileName: uploadedFile?.name,
+          datasetId: explicitDatasetId
         })
       });
 
       const data = await res.json();
 
-      if (!res.ok) {
+      if (!res.ok && !data.guidance) {
+        setSchema(null);
         throw new Error(data.error || 'Failed to generate dashboard');
       }
 
+      // Check if server yielded structured guidance (e.g. DATASET_REQUIRED, UNSUPPORTED_DOMAIN, CLARIFICATION_REQUIRED, NO_DATA_FOUND)
+      if (data.state && data.state !== 'SUCCESS') {
+        // Prevent stale dashboard reuse
+        setSchema(null);
+        setGuidance({
+          state: data.state,
+          info: data.guidance || {
+            domain: 'Data Domain',
+            message: data.error || 'The requested analytical domain requires attention or an attached dataset.',
+            actionRequired: 'NONE',
+            suggestedPrompts: [],
+            supportedConnectors: []
+          }
+        });
+        setTimeout(() => {
+          dashboardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 150);
+        return;
+      }
+
       if (data.schema) {
+        setGuidance(null);
         setSchema(data.schema);
         setDebugInfo({
           source: data.source || 'verified_engine',
@@ -189,12 +222,14 @@ export default function GenUIPage() {
           dashboardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 150);
       } else {
+        setSchema(null);
         throw new Error('Server returned an empty dashboard schema.');
       }
     } catch (err: unknown) {
       console.error('[GenUI Generation Error]:', err);
       const msg = err instanceof Error ? err.message : 'An error occurred during dashboard generation.';
       setErrorMessage(msg);
+      setSchema(null);
     } finally {
       setIsLoading(false);
     }
@@ -266,6 +301,11 @@ export default function GenUIPage() {
             {/* In-page navigation links */}
             <nav className="hidden md:flex items-center space-x-6 text-xs font-medium text-[#4b5563] dark:text-slate-400">
               <a href="#workbench" className="hover:text-[#111827] dark:hover:text-slate-100 transition-colors">Query Workbench</a>
+              <a href="#industry-hub" className="hover:text-[#111827] dark:hover:text-slate-100 transition-colors flex items-center space-x-1.5 font-semibold text-lime-700 dark:text-lime-400">
+                <Database className="w-3.5 h-3.5" />
+                <span>Industry Data Hub</span>
+                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-lime-500/10 border border-lime-500/20">36</span>
+              </a>
               <a href="#connectors" className="hover:text-[#111827] dark:hover:text-slate-100 transition-colors">Data Connectors</a>
               <a href="#architecture" className="hover:text-[#111827] dark:hover:text-slate-100 transition-colors">Architecture</a>
               <a href="#governance" className="hover:text-[#111827] dark:hover:text-slate-100 transition-colors">Data Integrity</a>
@@ -566,8 +606,183 @@ export default function GenUIPage() {
           </div>
         )}
 
-        {/* PRODUCT PREVIEW (When no live query is active) */}
-        {!isLoading && !schema && (
+        {/* STRUCTURED ANALYTICAL GUIDANCE & RESOLUTION PANEL */}
+        {!isLoading && !schema && guidance && (
+          <div className="space-y-6 animate-fade-in">
+            {/* Header Status Bar */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3.5 border-b border-[#cbd5e1] dark:border-[#1e2533] gap-2">
+              <div className="flex items-center space-x-2.5">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-[#64748b] dark:text-slate-400 font-semibold">
+                  Analytical Resolution
+                </span>
+                <span className={`text-[10px] font-mono px-2 py-0.5 rounded font-semibold border ${
+                  guidance.state === 'DATASET_REQUIRED'
+                    ? 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/30'
+                    : guidance.state === 'UNSUPPORTED_DOMAIN'
+                    ? 'bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/30'
+                    : guidance.state === 'CLARIFICATION_REQUIRED'
+                    ? 'bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/30'
+                    : guidance.state === 'NO_DATA_FOUND'
+                    ? 'bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border-cyan-500/30'
+                    : 'bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/30'
+                }`}>
+                  {guidance.state.replace(/_/g, ' ')}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setGuidance(null)}
+                className="text-xs text-[#64748b] hover:text-[#111827] dark:hover:text-white transition-colors cursor-pointer self-start sm:self-auto font-mono"
+              >
+                Reset to Preview
+              </button>
+            </div>
+
+            {/* Resolution Card */}
+            <div className="bg-white dark:bg-[#0d1017]/95 backdrop-blur-md border border-[#cbd5e1] dark:border-[#1e2533] rounded-lg p-6 sm:p-8 space-y-6 shadow-xl shadow-slate-900/10 dark:shadow-2xl dark:shadow-black/60 transition-colors">
+              <div className="flex items-start space-x-4">
+                <div className={`w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                  guidance.state === 'DATASET_REQUIRED'
+                    ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20'
+                    : guidance.state === 'UNSUPPORTED_DOMAIN'
+                    ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20'
+                    : guidance.state === 'CLARIFICATION_REQUIRED'
+                    ? 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20'
+                    : 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20'
+                }`}>
+                  {guidance.state === 'DATASET_REQUIRED' ? (
+                    <Upload className="w-6 h-6" />
+                  ) : guidance.state === 'UNSUPPORTED_DOMAIN' ? (
+                    <Layers className="w-6 h-6" />
+                  ) : guidance.state === 'CLARIFICATION_REQUIRED' ? (
+                    <HelpCircle className="w-6 h-6" />
+                  ) : (
+                    <AlertTriangle className="w-6 h-6" />
+                  )}
+                </div>
+
+                <div className="space-y-2 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-[10px] font-mono uppercase tracking-wider font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-[#141824] text-[#475569] dark:text-slate-300 border border-[#cbd5e1] dark:border-[#1e2533]">
+                      Domain: {guidance.info.domain}
+                    </span>
+                    {guidance.info.subdomain && (
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-[#141824] text-[#475569] dark:text-slate-300 border border-[#cbd5e1] dark:border-[#1e2533]">
+                        {guidance.info.subdomain}
+                      </span>
+                    )}
+                  </div>
+
+                  <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#111827] dark:text-white">
+                    {guidance.state === 'DATASET_REQUIRED'
+                      ? 'Upload Dataset to Generate Dashboard'
+                      : guidance.state === 'UNSUPPORTED_DOMAIN'
+                      ? 'Data Source Currently Not Connected'
+                      : guidance.state === 'CLARIFICATION_REQUIRED'
+                      ? 'More Specific Query Required'
+                      : 'Data Records Unavailable'}
+                  </h2>
+
+                  <p className="text-sm text-[#374151] dark:text-slate-300 leading-relaxed max-w-3xl">
+                    {guidance.info.message}
+                  </p>
+                </div>
+              </div>
+
+              {/* Action Section */}
+              <div className="pt-4 border-t border-[#cbd5e1] dark:border-[#1e2533] space-y-4">
+                {guidance.info.actionRequired === 'UPLOAD_DATASET' && (
+                  <div className="p-4 rounded-lg bg-[#f8fafc] dark:bg-[#080a0f] border border-[#cbd5e1] dark:border-[#1e2533] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div className="space-y-1">
+                      <div className="text-xs font-semibold text-[#111827] dark:text-white flex items-center space-x-1.5">
+                        <FileText className="w-4 h-4 text-amber-500" />
+                        <span>Ready to analyze your files</span>
+                      </div>
+                      <p className="text-xs text-[#64748b] dark:text-slate-400">
+                        Attach a CSV or JSON file (up to 5MB). Processed strictly in-memory with zero permanent cloud storage.
+                      </p>
+                      {guidance.info.missingParameters && guidance.info.missingParameters.length > 0 && (
+                        <div className="text-[11px] font-mono text-amber-700 dark:text-amber-400 pt-1">
+                          Recommended columns: {guidance.info.missingParameters.join(', ')}
+                        </div>
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="px-4 py-2 rounded-md bg-[#84cc16] hover:bg-[#65a30d] text-[#0f172a] text-xs font-bold transition-all shadow-md shadow-lime-500/20 flex items-center space-x-2 cursor-pointer flex-shrink-0"
+                    >
+                      <Upload className="w-4 h-4" />
+                      <span>Attach CSV Dataset</span>
+                    </button>
+                  </div>
+                )}
+
+                {/* Instant Industry Dataset Match from Catalog */}
+                {guidance.info.matchedCatalogDatasetId && (
+                  <div className="p-4 rounded-lg bg-lime-500/10 border border-lime-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div className="space-y-1">
+                      <div className="text-xs font-semibold text-[#111827] dark:text-white flex items-center space-x-1.5">
+                        <Sparkles className="w-4 h-4 text-lime-600 dark:text-lime-400" />
+                        <span>Verified Industry Benchmark Available</span>
+                      </div>
+                      <p className="text-xs text-[#374151] dark:text-slate-300">
+                        A verified synthetic benchmark dataset matching this query is ready in our Industry Data Hub: <span className="font-mono font-semibold text-lime-700 dark:text-lime-300">{guidance.info.matchedCatalogDatasetId}</span>.
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <button
+                        type="button"
+                        onClick={() => handleGenerate(prompt, guidance.info.matchedCatalogDatasetId)}
+                        className="px-4 py-2 rounded-md bg-[#84cc16] hover:bg-[#65a30d] text-[#0f172a] text-xs font-bold transition-all shadow-md shadow-lime-500/20 flex items-center space-x-1.5 cursor-pointer flex-shrink-0"
+                      >
+                        <span>Generate with Sample Data</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Suggested Supported Prompts */}
+                {guidance.info.suggestedPrompts && guidance.info.suggestedPrompts.length > 0 && (
+                  <div className="space-y-2">
+                    <div className="text-xs font-mono uppercase tracking-wider text-[#64748b] dark:text-slate-400 font-semibold flex items-center space-x-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-lime-500" />
+                      <span>Or Try an Approved Live Query:</span>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {guidance.info.suggestedPrompts.map((sugPrompt, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => {
+                            setPrompt(sugPrompt);
+                            handleGenerate(sugPrompt);
+                          }}
+                          className="text-left text-xs px-3 py-1.5 rounded-md bg-[#f8fafc] dark:bg-[#141824] hover:bg-slate-200 dark:hover:bg-[#1e2533] text-[#374151] dark:text-slate-200 border border-[#cbd5e1] dark:border-[#1e2533] hover:border-[#84cc16] dark:hover:border-lime-500/40 transition-colors cursor-pointer"
+                        >
+                          "{sugPrompt}"
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Connected Data Sources List */}
+                {guidance.info.supportedConnectors && guidance.info.supportedConnectors.length > 0 && (
+                  <div className="pt-2">
+                    <span className="text-[11px] font-mono text-[#64748b] dark:text-slate-400">
+                      Approved Connected Sources: {guidance.info.supportedConnectors.join(' • ')}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* PRODUCT PREVIEW (When no live query is active and no guidance) */}
+        {!isLoading && !schema && !guidance && (
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3.5 border-b border-[#cbd5e1] dark:border-[#1e2533] gap-2">
               <div className="flex items-center space-x-2.5">
@@ -865,6 +1080,19 @@ export default function GenUIPage() {
         )}
 
       </main>
+
+      {/* INDUSTRY DATA HUB SECTION */}
+      <div className="border-t border-[#cbd5e1] dark:border-[#1e2533] bg-white/70 dark:bg-[#07090e]/85 backdrop-blur-md relative z-10 transition-colors">
+        <IndustryDataHub 
+          onSelectDataset={(datasetId, samplePrompt) => {
+            handleGenerate(samplePrompt, datasetId);
+            setTimeout(() => {
+              dashboardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+          }}
+          isGenerating={isLoading}
+        />
+      </div>
 
       {/* DETAILED SPECIFICATION SECTIONS */}
       <section id="connectors" className="border-t border-[#cbd5e1] dark:border-[#1e2533] bg-[#f8fafc]/95 dark:bg-[#090c12]/92 backdrop-blur-md py-16 px-6 sm:px-8 relative z-10 transition-colors">

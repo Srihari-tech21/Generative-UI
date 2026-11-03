@@ -1,0 +1,16 @@
+show_id,movie_title,screen,show_date,time_slot,capacity,seats_sold,occupancy_rate_pct,ticket_revenue
+SHW-101,Interstellar Odyssey,Audi 1 (IMAX),2025-02-01,Evening,280,246,87.9,3813.00
+SHW-102,Neon Cyberpunk 2099,Audi 3,2025-02-01,Night,220,188,85.5,3008.00
+SHW-103,The Royal Dynasty,Audi 4,2025-02-01,Matinee,200,134,67.0,1675.00
+SHW-104,Echoes of the Past,Audi 2,2025-02-01,Evening,180,118,65.6,1357.00
+SHW-105,Interstellar Odyssey,Audi 1 (IMAX),2025-02-02,Night,280,265,94.6,4107.50
+SHW-106,Wild Frontier,Audi 2,2025-02-02,Matinee,180,94,52.2,940.00
+SHW-107,Dragon Kingdom,Audi 4,2025-02-02,Morning,200,162,81.0,1863.00
+SHW-108,Neon Cyberpunk 2099,Audi 3,2025-02-03,Evening,220,172,78.2,2752.00
+SHW-109,The Royal Dynasty,Audi 4,2025-02-03,Evening,200,140,70.0,1750.00
+SHW-110,Interstellar Odyssey,Audi 1 (IMAX),2025-02-04,Evening,280,230,82.1,3565.00
+SHW-111,Echoes of the Past,Audi 2,2025-02-04,Night,180,122,67.8,1464.00
+SHW-112,Laughter Express,Audi 3,2025-02-05,Evening,220,165,75.0,1980.00
+SHW-113,Interstellar Odyssey,Audi 1 (IMAX),2025-02-05,Night,280,252,90.0,3906.00
+SHW-114,Wild Frontier,Audi 2,2025-02-05,Evening,180,98,54.4,980.00
+SHW-115,Neon Cyberpunk 2099,Audi 3,2025-02-05,Night,220,180,81.8,2880.00

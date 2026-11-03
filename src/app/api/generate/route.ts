@@ -88,11 +88,12 @@ export async function POST(req: NextRequest) {
     prompt = (body.prompt || '').trim();
     fileContent = body.fileContent;
     fileName = body.fileName;
+    const datasetId = body.datasetId;
 
-    // Validation: Require either prompt or file upload
-    if (!prompt && (!fileContent || fileContent.trim().length === 0)) {
+    // Validation: Require either prompt, file upload, or datasetId
+    if (!prompt && (!fileContent || fileContent.trim().length === 0) && !datasetId) {
       return NextResponse.json(
-        { error: 'Please enter a description or upload a CSV/JSON dataset.' },
+        { error: 'Please enter a description, select an industry dataset, or upload a CSV/JSON file.' },
         { status: 400 }
       );
     }
@@ -105,19 +106,32 @@ export async function POST(req: NextRequest) {
     }
 
     // STEP 1: Online Data Retrieval via the Data Source Registry
-    console.log(`[GenUI Pipeline] Initiating data retrieval for query: "${prompt || fileName}"`);
+    console.log(`[GenUI Pipeline] Initiating data retrieval for query: "${prompt || fileName || datasetId}"`);
     let retrievalResult;
     try {
-      retrievalResult = await orchestrateDataRetrieval({ prompt, fileContent, fileName });
+      retrievalResult = await orchestrateDataRetrieval({ prompt, fileContent, fileName, datasetId });
     } catch (dataErr: any) {
       console.error('[GenUI Pipeline Error] External data source failed:', dataErr);
       return NextResponse.json(
         {
+          state: 'DATA_SOURCE_ERROR',
           error: `External data retrieval failed: ${dataErr.message || 'Unable to reach provider API.'}`,
-          details: 'Data connector was unable to fetch or normalize verified information for this topic.'
+          details: 'Data connector was unable to fetch or normalize verified information for this topic.',
+          schema: null
         },
         { status: 502 }
       );
+    }
+
+    // Check if the retrieval resulted in a non-SUCCESS state (e.g. DATASET_REQUIRED, UNSUPPORTED_DOMAIN, CLARIFICATION_REQUIRED, NO_DATA_FOUND)
+    if (retrievalResult.state !== 'SUCCESS' || !retrievalResult.dataPacket) {
+      console.log(`[GenUI Pipeline] Returning structured analytical guidance (State: ${retrievalResult.state})`);
+      return NextResponse.json({
+        state: retrievalResult.state,
+        guidance: retrievalResult.guidance,
+        intent: retrievalResult.intent,
+        schema: null
+      });
     }
 
     const { dataPacket, connectorId } = retrievalResult;
@@ -144,6 +158,7 @@ export async function POST(req: NextRequest) {
       const validation = UISchemaSchema.safeParse(compiledSchema);
       if (validation.success) {
         return NextResponse.json({
+          state: 'SUCCESS',
           schema: validation.data,
           source: 'deterministic_compiled',
           connector: connectorId,
@@ -211,6 +226,7 @@ Synthesize an interactive dashboard for the user's request. Ground all KPI cards
         }
       );
       return NextResponse.json({
+        state: 'SUCCESS',
         schema: compiledSchema,
         source: 'fallback_compiled',
         connector: connectorId,
@@ -238,6 +254,7 @@ Synthesize an interactive dashboard for the user's request. Ground all KPI cards
     const validation = UISchemaSchema.safeParse(parsedSchema);
     if (validation.success) {
       return NextResponse.json({
+        state: 'SUCCESS',
         schema: validation.data,
         source: 'ai_synthesized',
         connector: connectorId,
@@ -254,6 +271,7 @@ Synthesize an interactive dashboard for the user's request. Ground all KPI cards
       aiStatus: 'AI schema failed strict Zod validation; repaired via deterministic compiler'
     });
     return NextResponse.json({
+      state: 'SUCCESS',
       schema: safeCompiled,
       source: 'fallback_compiled',
       connector: connectorId,

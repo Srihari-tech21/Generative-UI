@@ -1,0 +1,11 @@
+tracking_number,origin,destination,weight_kg,mode,dispatch_date,estimated_delivery,current_status,freight_charge
+TRK-5501,Nhava Sheva Port,Delhi ICD,14200,Rail Freight,2025-02-01,2025-02-04,In Transit,1850.00
+TRK-5502,Chennai Port,Bengaluru Hub,8500,Road Transport,2025-02-01,2025-02-02,Delivered,920.00
+TRK-5503,IGI Airport Delhi,Frankfurt Airport,1250,Air Cargo,2025-02-02,2025-02-03,Delivered,3450.00
+TRK-5504,Mundra Port,Ahmedabad Warehouse,19500,Road Transport,2025-02-02,2025-02-03,Delivered,1150.00
+TRK-5505,Kolkata Port,Patna Hub,11200,Road Transport,2025-02-03,2025-02-05,In Transit,1420.00
+TRK-5506,Bengaluru Airport,Dubai Cargo Hub,980,Air Cargo,2025-02-03,2025-02-04,Delivered,2800.00
+TRK-5507,Mumbai Hub,Hyderabad Depot,6400,Road Transport,2025-02-04,2025-02-05,Delivered,890.00
+TRK-5508,Visakhapatnam,Nagpur Hub,16800,Rail Freight,2025-02-04,2025-02-07,In Transit,1980.00
+TRK-5509,Cochin Port,Coimbatore Hub,5300,Road Transport,2025-02-05,2025-02-06,In Transit,680.00
+TRK-5510,Mumbai Airport,London Heathrow,1800,Air Cargo,2025-02-05,2025-02-06,Customs Cleared,4600.00

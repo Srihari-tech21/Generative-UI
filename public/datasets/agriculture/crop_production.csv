@@ -1,0 +1,16 @@
+record_id,state,crop_name,season,cultivated_area_hectares,total_production_tons,yield_kg_per_hectare
+AGR-101,Punjab,Wheat,Rabi,3520000,17600000,5000.0
+AGR-102,Haryana,Wheat,Rabi,2540000,11938000,4700.0
+AGR-103,Uttar Pradesh,Rice (Paddy),Kharif,5890000,15903000,2700.0
+AGR-104,West Bengal,Rice (Paddy),Kharif,5420000,16260000,3000.0
+AGR-105,Madhya Pradesh,Soybean,Kharif,5010000,6012000,1200.0
+AGR-106,Maharashtra,Cotton,Kharif,4250000,1912500,450.0
+AGR-107,Gujarat,Groundnut,Kharif,1890000,3969000,2100.0
+AGR-108,Karnataka,Maize (Corn),Kharif,1420000,4544000,3200.0
+AGR-109,Andhra Pradesh,Rice (Paddy),Kharif,2210000,7735000,3500.0
+AGR-110,Rajasthan,Mustard / Rapeseed,Rabi,3120000,4680000,1500.0
+AGR-111,Uttar Pradesh,Sugarcane,Annual,2280000,182400000,80000.0
+AGR-112,Maharashtra,Sugarcane,Annual,1140000,96900000,85000.0
+AGR-113,Tamil Nadu,Rice (Paddy),Kharif,1820000,6916000,3800.0
+AGR-114,Telangana,Cotton,Kharif,2150000,1182500,550.0
+AGR-115,Bihar,Maize (Corn),Rabi,850000,3400000,4000.0

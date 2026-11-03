@@ -1,0 +1,16 @@
+booking_ref,guest_name,room_type,nights,room_rate_per_night,total_room_charge,service_fee,grand_total,booking_status
+HTL-401,Alexander Wright,Deluxe Ocean View,3,180.00,540.00,45.00,585.00,Confirmed
+HTL-402,Sunita Nambiar,Executive Suite,2,260.00,520.00,50.00,570.00,Confirmed
+HTL-403,Marcus Becker,Standard Queen,4,110.00,440.00,35.00,475.00,Confirmed
+HTL-404,Elena Rostova,Presidential Suite,3,450.00,1350.00,120.00,1470.00,Confirmed
+HTL-405,Rajeev Saxena,Deluxe Ocean View,2,180.00,360.00,30.00,390.00,Cancelled
+HTL-406,Chloe Dupont,Standard King,3,125.00,375.00,35.00,410.00,Confirmed
+HTL-407,Tariq Mansoor,Executive Suite,4,260.00,1040.00,85.00,1125.00,Confirmed
+HTL-408,Kavita Deshmukh,Standard Queen,1,110.00,110.00,20.00,130.00,Confirmed
+HTL-409,Daniel Craig,Deluxe Ocean View,5,180.00,900.00,75.00,975.00,Confirmed
+HTL-410,Mei Ling Chen,Standard King,2,125.00,250.00,25.00,275.00,Confirmed
+HTL-411,Carlos Silva,Executive Suite,3,260.00,780.00,65.00,845.00,Confirmed
+HTL-412,Ananya Roy,Deluxe Ocean View,4,180.00,720.00,60.00,780.00,Confirmed
+HTL-413,Patrick O'Brien,Presidential Suite,2,450.00,900.00,80.00,980.00,Confirmed
+HTL-414,Deepak Varma,Standard Queen,3,110.00,330.00,30.00,360.00,Confirmed
+HTL-415,Svetlana Ivanova,Executive Suite,2,260.00,520.00,45.00,565.00,Confirmed

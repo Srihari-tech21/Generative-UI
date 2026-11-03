@@ -1,0 +1,9 @@
+department,doctors_count,beds_available,beds_occupied,occupancy_rate_pct,monthly_admissions,avg_length_of_stay_days
+Cardiology,14,60,53,88.3,184,4.2
+Orthopedics,11,45,38,84.4,142,3.8
+Neurology,9,35,29,82.9,98,5.6
+Pediatrics,12,50,34,68.0,165,2.4
+Oncology,8,30,28,93.3,76,7.1
+General Surgery,15,70,59,84.3,210,3.5
+Intensive Care Unit (ICU),10,24,22,91.7,85,6.2
+Emergency Medicine,18,40,32,80.0,420,1.2

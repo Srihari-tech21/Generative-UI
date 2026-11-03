@@ -1,0 +1,16 @@
+student_id,student_name,grade_level,mathematics,science,english,history,average_score,pass_status
+STU-01,Aarav Sharma,Grade 10,94,92,88,86,90.0,Pass
+STU-02,Diya Patel,Grade 10,88,85,91,84,87.0,Pass
+STU-03,Rohan Verma,Grade 10,72,68,75,71,71.5,Pass
+STU-04,Ananya Iyer,Grade 10,98,96,94,92,95.0,Pass
+STU-05,Kabir Singh,Grade 10,54,58,62,56,57.5,Pass
+STU-06,Meera Nair,Grade 10,91,89,93,87,90.0,Pass
+STU-07,Vikram Rao,Grade 10,38,42,48,40,42.0,Pass
+STU-08,Pooja Hegde,Grade 10,82,79,85,80,81.5,Pass
+STU-09,Arjun Menon,Grade 10,65,71,68,64,67.0,Pass
+STU-10,Tanvi Kulkarni,Grade 10,95,94,90,91,92.5,Pass
+STU-11,Nikhil Joshi,Grade 10,48,52,56,50,51.5,Pass
+STU-12,Sneha Roy,Grade 10,86,88,84,82,85.0,Pass
+STU-13,Gaurav Bansal,Grade 10,34,38,44,36,38.0,Fail
+STU-14,Rhea Sen,Grade 10,92,90,95,89,91.5,Pass
+STU-15,Karan Gupta,Grade 10,76,74,78,72,75.0,Pass

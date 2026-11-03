@@ -1,0 +1,9 @@
+movie_id,title,genre,total_shows,total_admissions,gross_box_office,average_occupancy_pct,critic_rating
+MOV-01,Interstellar Odyssey,Sci-Fi,48,9450,141750.00,82.4,9.1
+MOV-02,Neon Cyberpunk 2099,Action,42,8120,129920.00,78.2,8.6
+MOV-03,The Royal Dynasty,Historical Drama,36,6340,81152.00,69.5,8.2
+MOV-04,Echoes of the Past,Mystery Thriller,32,4920,56580.00,62.8,7.9
+MOV-05,Wild Frontier,Western Adventure,28,3480,36540.00,54.1,7.2
+MOV-06,Laughter Express,Comedy,30,4820,48200.00,68.9,7.8
+MOV-07,Dragon Kingdom,Animation,34,5920,68080.00,73.6,8.4
+MOV-08,Shadows in the Mist,Horror,24,2840,29820.00,49.2,6.8

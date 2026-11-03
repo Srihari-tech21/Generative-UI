@@ -1,0 +1,16 @@
+loan_id,borrower_type,loan_category,principal_amount,interest_rate_pct,term_months,outstanding_balance,risk_rating,status
+LN-8801,Individual,Home Mortgage,280000,7.25,240,245000,Low,Performing
+LN-8802,SME Business,Equipment Finance,95000,9.50,60,68000,Medium,Performing
+LN-8803,Corporate,Working Capital Facility,1200000,8.10,36,890000,Low,Performing
+LN-8804,Individual,Auto Loan,32000,8.75,60,24500,Low,Performing
+LN-8805,Individual,Personal Loan,18000,13.20,36,9200,High,Overdue 30 Days
+LN-8806,SME Business,Invoice Discounting,65000,10.00,12,18000,Medium,Performing
+LN-8807,Corporate,Commercial Real Estate,3400000,7.85,120,2950000,Low,Performing
+LN-8808,Individual,Home Mortgage,350000,7.15,300,320000,Low,Performing
+LN-8809,SME Business,Expansion Term Loan,140000,9.25,84,112000,Medium,Performing
+LN-8810,Individual,Personal Loan,12000,13.80,24,3800,High,Default / NPL
+LN-8811,Corporate,Project Finance Solar,2100000,7.60,180,1890000,Low,Performing
+LN-8812,Individual,Auto Loan,41000,8.60,60,34000,Low,Performing
+LN-8813,Individual,Education Loan,55000,8.90,120,44000,Medium,Performing
+LN-8814,SME Business,Working Capital,80000,9.80,24,52000,Medium,Performing
+LN-8815,Individual,Home Mortgage,420000,7.10,240,380000,Low,Performing

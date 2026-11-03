@@ -1,0 +1,16 @@
+month,business_unit,product_line,gross_revenue,discounts,net_revenue,target_revenue
+2025-01,Cloud Infrastructure,Compute Instances,450000,22500,427500,410000
+2025-01,Cloud Infrastructure,Object Storage,185000,9250,175750,170000
+2025-01,Enterprise Software,CRM Suite,620000,31000,589000,560000
+2025-01,Cybersecurity,Identity Protection,280000,14000,266000,250000
+2025-02,Cloud Infrastructure,Compute Instances,480000,24000,456000,430000
+2025-02,Cloud Infrastructure,Object Storage,198000,9900,188100,180000
+2025-02,Enterprise Software,CRM Suite,645000,32250,612750,590000
+2025-02,Cybersecurity,Identity Protection,310000,15500,294500,270000
+2025-03,Cloud Infrastructure,Compute Instances,515000,25750,489250,460000
+2025-03,Cloud Infrastructure,Object Storage,210000,10500,199500,190000
+2025-03,Enterprise Software,CRM Suite,680000,34000,646000,620000
+2025-03,Cybersecurity,Identity Protection,335000,16750,318250,295000
+2025-04,Cloud Infrastructure,Compute Instances,540000,27000,513000,480000
+2025-04,Enterprise Software,CRM Suite,710000,35500,674500,650000
+2025-04,Cybersecurity,Identity Protection,360000,18000,342000,320000

@@ -1,0 +1,16 @@
+appointment_id,patient_id,department,doctor_name,appointment_date,appointment_type,status,consultation_fee
+APT-1001,P-8401,Cardiology,Dr. Rajesh Gupta,2025-02-01,Routine Checkup,Completed,120.00
+APT-1002,P-8402,Orthopedics,Dr. Sarah Jenkins,2025-02-01,Post-Op Review,Completed,95.00
+APT-1003,P-8403,Pediatrics,Dr. Anita Desai,2025-02-01,Vaccination,Completed,65.00
+APT-1004,P-8404,Neurology,Dr. David Chen,2025-02-01,Consultation,Cancelled,0.00
+APT-1005,P-8405,Oncology,Dr. Robert Taylor,2025-02-02,Chemo Consultation,Completed,180.00
+APT-1006,P-8406,Cardiology,Dr. Rajesh Gupta,2025-02-02,ECG Analysis,Completed,140.00
+APT-1007,P-8407,General Medicine,Dr. Pooja Saxena,2025-02-02,Fever & Flu,Completed,50.00
+APT-1008,P-8408,Orthopedics,Dr. Sarah Jenkins,2025-02-03,Joint Pain,Completed,95.00
+APT-1009,P-8409,Dermatology,Dr. Maya Varma,2025-02-03,Skin Biopsy Review,Completed,85.00
+APT-1010,P-8410,Pediatrics,Dr. Anita Desai,2025-02-03,General Wellness,No-show,0.00
+APT-1011,P-8411,Cardiology,Dr. Rajesh Gupta,2025-02-04,Stress Test Followup,Completed,135.00
+APT-1012,P-8412,Neurology,Dr. David Chen,2025-02-04,Migraine Treatment,Completed,150.00
+APT-1013,P-8413,General Medicine,Dr. Pooja Saxena,2025-02-04,Annual Physical,Completed,60.00
+APT-1014,P-8414,Oncology,Dr. Robert Taylor,2025-02-05,Second Opinion,Completed,180.00
+APT-1015,P-8415,Orthopedics,Dr. Sarah Jenkins,2025-02-05,Fracture Cast Removal,Completed,90.00

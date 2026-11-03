@@ -26,6 +26,7 @@ async function runTests() {
   // TEST 1: Open-Meteo Weather Connector
   await assertTest('Weather connector fetches live conditions for Andhra Pradesh', async () => {
     const res = await orchestrateDataRetrieval({ prompt: 'Create a dashboard for weather conditions in Andhra Pradesh.' });
+    if (!res.dataPacket) throw new Error('dataPacket is undefined');
     if (res.connectorId !== 'open_meteo') throw new Error(`Expected open_meteo connector, got ${res.connectorId}`);
     if (res.dataPacket.source.sourceType !== 'live_api') throw new Error(`Expected live_api sourceType, got ${res.dataPacket.source.sourceType}`);
     if (!res.dataPacket.source.observationPeriod) throw new Error('Missing observationPeriod');
@@ -42,6 +43,7 @@ async function runTests() {
   // TEST 2: India GDP Growth (World Bank)
   await assertTest("World Bank connector retrieves India's GDP growth over time", async () => {
     const res = await orchestrateDataRetrieval({ prompt: "Analyze India's GDP growth and macro economic trajectory." });
+    if (!res.dataPacket) throw new Error('dataPacket is undefined');
     if (res.connectorId !== 'world_bank') throw new Error(`Expected world_bank, got ${res.connectorId}`);
     if (res.dataPacket.source.sourceType !== 'live_api') throw new Error(`Expected live_api sourceType, got ${res.dataPacket.source.sourceType}`);
     if (!res.dataPacket.source.observationPeriod?.includes('Historical Reporting Span')) throw new Error('Invalid observationPeriod format');
@@ -57,6 +59,7 @@ async function runTests() {
   // TEST 3: Renewable Energy Trends (World Bank)
   await assertTest('World Bank connector retrieves renewable energy trends', async () => {
     const res = await orchestrateDataRetrieval({ prompt: 'Analyze energy consumption and renewable energy adoption in India.' });
+    if (!res.dataPacket) throw new Error('dataPacket is undefined');
     if (res.connectorId !== 'world_bank') throw new Error(`Expected world_bank, got ${res.connectorId}`);
     if (res.dataPacket.source.sourceType !== 'live_api') throw new Error(`Expected live_api sourceType, got ${res.dataPacket.source.sourceType}`);
     if (!res.dataPacket.charts || res.dataPacket.charts.length === 0) throw new Error('No renewable charts');
@@ -69,6 +72,7 @@ async function runTests() {
   // TEST 4: Indian EV Market Intelligence
   await assertTest('Indian EV Market connector retrieves national & state adoption', async () => {
     const res = await orchestrateDataRetrieval({ prompt: 'Analyze the Indian electric vehicle market.' });
+    if (!res.dataPacket) throw new Error('dataPacket is undefined');
     if (res.connectorId !== 'indian_ev_mobility') throw new Error(`Expected indian_ev_mobility, got ${res.connectorId}`);
     if (res.dataPacket.source.sourceType !== 'curated_dataset') throw new Error(`Expected curated_dataset sourceType, got ${res.dataPacket.source.sourceType}`);
     if (!res.dataPacket.tables || res.dataPacket.tables.length === 0) throw new Error('No state EV tables returned');
@@ -81,6 +85,7 @@ async function runTests() {
   // TEST 5: Tech Companies Financial Comparison
   await assertTest('Market connector produces comparative financial architecture', async () => {
     const res = await orchestrateDataRetrieval({ prompt: 'Compare the performance of technology companies.' });
+    if (!res.dataPacket) throw new Error('dataPacket is undefined');
     if (res.connectorId !== 'market_intelligence') throw new Error(`Expected market_intelligence, got ${res.connectorId}`);
     if (res.dataPacket.source.sourceType !== 'curated_dataset') throw new Error(`Expected curated_dataset sourceType, got ${res.dataPacket.source.sourceType}`);
     
@@ -93,6 +98,7 @@ async function runTests() {
   await assertTest('User CSV dataset parses safely in memory with automated calculations', async () => {
     const mockCSV = `Date,Product_Category,Units_Sold,Revenue_INR,Region\n2025-01-01,Electronics,450,1575000,South\n2025-01-02,Apparel,820,984000,West\n2025-01-03,Groceries,1200,600000,North\n2025-01-04,Electronics,510,1785000,South`;
     const res = await orchestrateDataRetrieval({ prompt: '', fileContent: mockCSV, fileName: 'q1_retail_sales.csv' });
+    if (!res.dataPacket) throw new Error('dataPacket is undefined');
     if (res.connectorId !== 'user_dataset') throw new Error(`Expected user_dataset, got ${res.connectorId}`);
     if (res.dataPacket.source.sourceType !== 'user_upload') throw new Error(`Expected user_upload sourceType, got ${res.dataPacket.source.sourceType}`);
     if (res.dataPacket.kpis[0].value !== '4') throw new Error(`Expected 4 records, got ${res.dataPacket.kpis[0].value}`);

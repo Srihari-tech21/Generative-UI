@@ -1,0 +1,13 @@
+market_id,state,commodity,variety,arrivals_quintals,min_price_rs_per_qtl,max_price_rs_per_qtl,modal_price_rs_per_qtl,date
+MKT-01,Punjab,Wheat,PBW 725,14200,2275,2350,2300,2025-02-01
+MKT-02,Haryana,Basmati Rice,1121 Pusa,8900,4200,4800,4550,2025-02-01
+MKT-03,Maharashtra,Soybean,Yellow Grade 1,12400,4400,4750,4600,2025-02-01
+MKT-04,Gujarat,Cotton,Medium Staple,16800,6800,7400,7100,2025-02-02
+MKT-05,Rajasthan,Mustard Seed,Black Bold,9800,5100,5500,5350,2025-02-02
+MKT-06,Madhya Pradesh,Chana (Chickpeas),Desi Bold,7500,5600,6100,5900,2025-02-02
+MKT-07,Andhra Pradesh,Red Chilli,Teja S17,6200,16500,19200,17800,2025-02-03
+MKT-08,Karnataka,Turmeric,Salem Finger,4800,12800,14500,13600,2025-02-03
+MKT-09,Uttar Pradesh,Potato,Jyoti Fresh,22500,950,1200,1100,2025-02-03
+MKT-10,Maharashtra,Onion,Red Nashik,31000,1600,2200,1950,2025-02-04
+MKT-11,West Bengal,Jute,TD-5 Commercial,5400,5200,5800,5500,2025-02-04
+MKT-12,Tamil Nadu,Coconut,Grade A Medium,18500,2400,2800,2650,2025-02-04

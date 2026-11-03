@@ -1,0 +1,16 @@
+expense_id,department,category,amount,budget_allocated,variance,month
+EXP-101,Engineering,Cloud Hosting & AWS,142000,150000,8000,2025-01
+EXP-102,Marketing,Digital Ad Campaigns,98000,110000,12000,2025-01
+EXP-103,Sales,Travel & Client Dinners,34000,40000,6000,2025-01
+EXP-104,Human Resources,Recruiting & Headhunting,28000,25000,-3000,2025-01
+EXP-105,Operations,Office Facilities & Leases,55000,55000,0,2025-01
+EXP-106,Engineering,Developer Tool Licenses,42000,45000,3000,2025-02
+EXP-107,Marketing,Industry Conferences,65000,60000,-5000,2025-02
+EXP-108,Sales,Sales Incentives & Bonuses,88000,85000,-3000,2025-02
+EXP-109,Finance,Audit & Legal Retainers,32000,35000,3000,2025-02
+EXP-110,Operations,Hardware Procurement,48000,50000,2000,2025-02
+EXP-111,Engineering,Cloud Hosting & AWS,156000,160000,4000,2025-03
+EXP-112,Marketing,Digital Ad Campaigns,105000,115000,10000,2025-03
+EXP-113,Human Resources,Employee Wellness & Training,22000,25000,3000,2025-03
+EXP-114,Sales,CRM Software Licensing,39000,40000,1000,2025-03
+EXP-115,Operations,Office Facilities & Leases,56000,55000,-1000,2025-03

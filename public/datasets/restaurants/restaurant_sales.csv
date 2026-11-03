@@ -1,0 +1,16 @@
+item_id,item_name,category,price,quantity,total_revenue,order_date
+ITM-101,Butter Chicken,Mains,18.50,142,2627.00,2025-02-01
+ITM-102,Garlic Naan,Breads,4.00,380,1520.00,2025-02-01
+ITM-103,Paneer Tikka,Starters,13.00,95,1235.00,2025-02-01
+ITM-104,Chicken Biryani,Mains,16.50,210,3465.00,2025-02-02
+ITM-105,Mango Lassi,Beverages,5.50,190,1045.00,2025-02-02
+ITM-106,Dal Makhani,Mains,12.50,115,1437.50,2025-02-02
+ITM-107,Samosa Platter,Starters,7.00,165,1155.00,2025-02-03
+ITM-108,Gulab Jamun,Desserts,6.00,120,720.00,2025-02-03
+ITM-109,Tandoori Roti,Breads,3.00,290,870.00,2025-02-03
+ITM-110,Mutton Rogan Josh,Mains,21.00,88,1848.00,2025-02-04
+ITM-111,Masala Chai,Beverages,3.50,225,787.50,2025-02-04
+ITM-112,Palak Paneer,Mains,13.50,102,1377.00,2025-02-04
+ITM-113,Gobi Manchurian,Starters,10.00,85,850.00,2025-02-05
+ITM-114,Kulfi Falooda,Desserts,7.50,74,555.00,2025-02-05
+ITM-115,Jeera Rice,Mains,5.00,140,700.00,2025-02-05

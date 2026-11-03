@@ -1,0 +1,9 @@
+route_id,origin_hub,destination_hub,distance_km,fuel_cost,toll_charges,driver_wages,total_trip_cost,trips_count
+RTE-01,Mumbai,Delhi,1420,480.00,85.00,160.00,725.00,42
+RTE-02,Bengaluru,Chennai,350,120.00,28.00,65.00,213.00,78
+RTE-03,Delhi,Kolkata,1530,520.00,95.00,175.00,790.00,36
+RTE-04,Mumbai,Bengaluru,980,335.00,62.00,130.00,527.00,54
+RTE-05,Hyderabad,Chennai,630,215.00,45.00,95.00,355.00,48
+RTE-06,Delhi,Chandigarh,260,90.00,22.00,50.00,162.00,85
+RTE-07,Ahmedabad,Mumbai,530,180.00,40.00,85.00,305.00,62
+RTE-08,Kolkata,Guwahati,990,345.00,58.00,140.00,543.00,28

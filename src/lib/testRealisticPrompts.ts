@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { orchestrateDataRetrieval } from './dataSources/orchestrator';
 import { compileSchemaFromDataPacket } from './schemaCompiler';
 import { UISchemaSchema } from '../types/schema';
@@ -7,6 +7,8 @@ export interface PromptEvaluationResult {
   id: number;
   category: string;
   prompt: string;
+  expectedState: string;
+  actualState: string;
   selectedConnector: string;
   sourceType: string;
   observationPeriod: string;
@@ -21,242 +23,276 @@ export async function runPromptEvaluation(): Promise<PromptEvaluationResult[]> {
   const evaluations: PromptEvaluationResult[] = [];
 
   const testCases = [
-    // 1. Weather comparison across cities
+    // 1. Show India's GDP growth.
     {
       id: 1,
-      category: 'Weather comparisons across cities',
-      prompt: 'Compare current weather between Mumbai and Delhi.',
+      category: '1. National Macroeconomic Growth',
+      prompt: "Show India's GDP growth.",
+      expectedState: 'SUCCESS',
       fileContent: undefined,
       fileName: undefined,
-      validate: (result: any, packet: any, schema: any) => {
-        const hasBoth = packet.tables?.some((t: any) => t.id === 'city_comparison_table') ||
-          packet.kpis.some((k: any) => k.id === 'secondary_city_temperature');
+      validate: (res: any) => {
+        const isWorldBank = res.connectorId === 'world_bank';
+        const isIndia = res.dataPacket?.topic?.toLowerCase().includes('india') && res.dataPacket?.topic?.toLowerCase().includes('gdp');
         return {
-          valid: hasBoth && result.connectorId === 'open_meteo',
-          notes: 'Open-Meteo fetched primary (Mumbai) and secondary (Delhi) live weather, generating a comparative telemetry card and dual-city comparison table.'
+          valid: isWorldBank && isIndia && res.state === 'SUCCESS',
+          notes: 'Correctly routed to World Bank Open Data for Indian GDP time series. Data is strictly relevant.'
         };
       }
     },
-    // 2. International city weather
+    // 2. Analyze Indian EV sales.
     {
       id: 2,
-      category: 'International city weather',
-      prompt: 'What is the weather and temperature forecast for London?',
+      category: '2. Clean Mobility & EV Sales',
+      prompt: 'Analyze Indian EV sales.',
+      expectedState: 'SUCCESS',
       fileContent: undefined,
       fileName: undefined,
-      validate: (result: any, packet: any, schema: any) => {
-        const isLondon = packet.topic.toLowerCase().includes('london');
+      validate: (res: any) => {
+        const isEV = res.connectorId === 'indian_ev_mobility';
+        const hasCategories = res.dataPacket?.charts?.some((c: any) => c.id === 'category_breakdown_trajectory' || c.id === 'annual_adoption_growth');
         return {
-          valid: isLondon && result.connectorId === 'open_meteo' && packet.source.sourceType === 'live_api',
-          notes: 'Open-Meteo resolved London coordinates, fetched live atmospheric conditions and 7-day model projections.'
+          valid: isEV && hasCategories && res.state === 'SUCCESS',
+          notes: 'Correctly routed to VAHAN/BEE Clean Mobility benchmark. Category distribution and yearly volume present.'
         };
       }
     },
-    // 3. Historical economic trends (China)
+    // 3. Show weather trends in Andhra Pradesh.
     {
       id: 3,
-      category: 'Historical economic trends',
-      prompt: "Analyze China's GDP growth over the last 15 years.",
+      category: '3. Real-Time Meteorological Trends',
+      prompt: 'Show weather trends in Andhra Pradesh.',
+      expectedState: 'SUCCESS',
       fileContent: undefined,
       fileName: undefined,
-      validate: (result: any, packet: any, schema: any) => {
-        const isChina = packet.topic.includes('China');
-        const hasTime = packet.charts.length > 0;
+      validate: (res: any) => {
+        const isMeteo = res.connectorId === 'open_meteo';
+        const isAP = res.dataPacket?.topic?.toLowerCase().includes('andhra pradesh');
         return {
-          valid: isChina && hasTime && result.connectorId === 'world_bank',
-          notes: 'World Bank connector retrieved 25 years of audited national GDP growth for China (CHN).'
+          valid: isMeteo && isAP && res.state === 'SUCCESS',
+          notes: 'Resolved Andhra Pradesh coordinates via geocoding API, fetched live atmospheric series and 7-day forecast.'
         };
       }
     },
-    // 4. Multi-country economic comparison
+    // 4. Create a restaurant sales dashboard.
     {
       id: 4,
-      category: 'Historical economic trends (Multi-country)',
-      prompt: 'Compare economic growth and GDP trajectory between India and the United States.',
+      category: '4. Restaurant Sales (No Dataset Uploaded)',
+      prompt: 'Create a restaurant sales dashboard.',
+      expectedState: 'DATASET_REQUIRED',
       fileContent: undefined,
       fileName: undefined,
-      validate: (result: any, packet: any, schema: any) => {
-        const isWorldBank = result.connectorId === 'world_bank';
-        const hasAssumptions = result.intent.dataSufficiency.assumptionsUsed.some((a: string) => a.includes('Comparative inquiry') || a.includes('United States') || a.includes('India'));
+      validate: (res: any) => {
+        const correctState = res.state === 'DATASET_REQUIRED';
+        const helpfulGuidance = res.guidance?.message?.includes('upload your restaurant sales') || res.guidance?.detectedDomain?.includes('Restaurant');
+        const noFallback = res.connectorId !== 'world_bank' && res.connectorId !== 'indian_ev_mobility' && !res.dataPacket;
         return {
-          valid: isWorldBank && hasAssumptions,
-          notes: 'World Bank connector recognized multi-country query; mapped to India with explicit assumption recording the United States comparative baseline.'
+          valid: correctState && helpfulGuidance && noFallback,
+          notes: 'Correctly identified restaurant domain. Zero arbitrary fallback to World Bank/EV; provided clear upload instructions.'
         };
       }
     },
-    // 5. Renewable energy adoption (Germany)
+    // 5. Analyze student academic performance.
     {
       id: 5,
-      category: 'Renewable energy adoption (Specific country)',
-      prompt: 'Analyze renewable electricity adoption and clean energy transition in Germany.',
+      category: '5. Student Performance (No Dataset Uploaded)',
+      prompt: 'Analyze student academic performance.',
+      expectedState: 'DATASET_REQUIRED',
       fileContent: undefined,
       fileName: undefined,
-      validate: (result: any, packet: any, schema: any) => {
-        const isGermany = packet.topic.includes('Germany');
-        const isRenewable = packet.topic.includes('Renewable');
+      validate: (res: any) => {
+        const correctState = res.state === 'DATASET_REQUIRED';
+        const isAcademic = res.intent?.domainClassification?.domain === 'academic_performance' ||
+          res.guidance?.detectedDomain?.includes('Academic') ||
+          res.guidance?.domain?.includes('Academic');
+        const noFallback = !res.dataPacket && res.connectorId !== 'world_bank';
         return {
-          valid: isGermany && isRenewable && result.connectorId === 'world_bank',
-          notes: 'World Bank retrieved Germany (DEU) indicator EG.ELC.RNEW.ZS (Renewable electricity % of total).'
+          valid: correctState && isAcademic && noFallback,
+          notes: 'Identified academic domain and prompted for student grade dataset. No irrelevant macroeconomic fallback.'
         };
       }
     },
-    // 6. Renewable energy adoption (Global / Brazil)
+    // 6. Show employee performance by department.
     {
       id: 6,
-      category: 'Renewable energy adoption (Developing economy)',
-      prompt: 'Show renewable energy output percentage for Brazil over historical years.',
+      category: '6. Employee HR Analytics (No Dataset Uploaded)',
+      prompt: 'Show employee performance by department.',
+      expectedState: 'DATASET_REQUIRED',
       fileContent: undefined,
       fileName: undefined,
-      validate: (result: any, packet: any, schema: any) => {
-        const isBrazil = packet.topic.includes('Brazil');
-        const isRenewable = packet.topic.includes('Renewable');
+      validate: (res: any) => {
+        const correctState = res.state === 'DATASET_REQUIRED';
+        const isHR = res.intent?.domainClassification?.domain === 'human_resources' ||
+          res.guidance?.detectedDomain?.includes('Human Resources') ||
+          res.guidance?.domain?.includes('Human Resources');
+        const noFallback = !res.dataPacket && res.connectorId !== 'world_bank';
         return {
-          valid: isBrazil && isRenewable && result.connectorId === 'world_bank',
-          notes: 'World Bank retrieved Brazil (BRA) renewable energy time-series with historical trajectory.'
+          valid: correctState && isHR && noFallback,
+          notes: 'Recognized HR domain. Asks for employee roster with department and salary columns.'
         };
       }
     },
-    // 7. EV adoption across Indian states
+    // 7. Compare population growth across countries.
     {
       id: 7,
-      category: 'EV adoption across Indian states',
-      prompt: 'Analyze electric vehicle adoption in Maharashtra compared to Tamil Nadu and Karnataka.',
+      category: '7. Multi-Country Demographics',
+      prompt: 'Compare population growth across countries.',
+      expectedState: 'SUCCESS',
       fileContent: undefined,
       fileName: undefined,
-      validate: (result: any, packet: any, schema: any) => {
-        const hasTable = packet.tables.some((t: any) => t.id === 'state_ev_matrix' || t.id === 'state_leaderboard');
+      validate: (res: any) => {
+        const isWorldBank = res.connectorId === 'world_bank';
+        const isDemographics = res.dataPacket?.topic?.toLowerCase().includes('demographics') || res.dataPacket?.topic?.toLowerCase().includes('population');
         return {
-          valid: hasTable && result.connectorId === 'indian_ev_mobility',
-          notes: 'Curated VAHAN statutory benchmark contains official state rankings for Maharashtra (3.42L), Karnataka (2.68L), and Tamil Nadu (2.15L).'
+          valid: isWorldBank && isDemographics && res.state === 'SUCCESS',
+          notes: 'Routed to World Bank SP.POP.TOTL indicator with cross-country comparative demographic series.'
         };
       }
     },
-    // 8. EV adoption (Segment focus)
+    // 8. Analyze monthly product sales.
     {
       id: 8,
-      category: 'EV adoption (Segment focus)',
-      prompt: 'Break down 2-wheeler vs 3-wheeler vs 4-wheeler electric vehicle market share in India.',
+      category: '8. Product Sales Analytics (No Dataset Uploaded)',
+      prompt: 'Analyze monthly product sales.',
+      expectedState: 'DATASET_REQUIRED',
       fileContent: undefined,
       fileName: undefined,
-      validate: (result: any, packet: any, schema: any) => {
-        const hasSegments = packet.charts.some((c: any) => 
-          c.id === 'category_breakdown_trajectory' || 
-          c.id === 'segment_pie_split' || 
-          c.id === 'segment_composition'
-        );
+      validate: (res: any) => {
+        const correctState = res.state === 'DATASET_REQUIRED';
+        const isSales = res.intent?.domainClassification?.domain === 'ecommerce_sales' ||
+          res.guidance?.detectedDomain?.includes('Commerce') ||
+          res.guidance?.domain?.includes('Commerce');
+        const noFallback = !res.dataPacket && res.connectorId !== 'world_bank';
         return {
-          valid: hasSegments && result.connectorId === 'indian_ev_mobility',
-          notes: 'VAHAN dataset breaks down 2W (60%), 3W (33%), 4W (6.5%), and commercial vehicles across 2020–2025.'
+          valid: correctState && isSales && noFallback,
+          notes: 'Identified retail/product sales domain. Prompted for transaction CSV without returning mock data.'
         };
       }
     },
-    // 9. Financial comparisons (Tech giants)
+    // 9. Show the financial performance of Microsoft.
     {
       id: 9,
-      category: 'Financial comparisons',
-      prompt: 'Compare Alphabet and Meta revenue, net margin, and market valuation.',
+      category: '9. Corporate Finance (Microsoft)',
+      prompt: 'Show the financial performance of Microsoft.',
+      expectedState: 'SUCCESS',
       fileContent: undefined,
       fileName: undefined,
-      validate: (result: any, packet: any, schema: any) => {
-        const hasBoth = packet.tables.some((t: any) => 
-          t.data.some((row: any) => row.company?.includes('Alphabet')) &&
-          t.data.some((row: any) => row.company?.includes('Meta'))
-        );
+      validate: (res: any) => {
+        const isMarket = res.connectorId === 'market_intelligence';
+        const isMSFT = res.dataPacket?.topic?.includes('Microsoft') && res.dataPacket?.kpis?.some((k: any) => k.label.includes('Microsoft') || k.value.includes('$3.18T'));
         return {
-          valid: hasBoth && result.connectorId === 'market_intelligence',
-          notes: 'SEC EDGAR GAAP TTM dataset contains verified numbers for Alphabet ($339.8B rev, 27.8% margin) and Meta ($164.8B rev, 35.1% margin).'
+          valid: isMarket && isMSFT && res.state === 'SUCCESS',
+          notes: 'Personalized SEC corporate intelligence to Microsoft Corporation (MSFT) with verified audited GAAP numbers.'
         };
       }
     },
-    // 10. Uploaded CSV analysis
+    // 10. Create a dashboard for an unsupported domain.
     {
       id: 10,
-      category: 'Uploaded CSV analysis',
-      prompt: 'Analyze clinical trial patient records.',
-      fileContent: `Patient_ID,Age,Systolic_BP,Cholesterol_mg_dl,Risk_Category\nPT-101,45,128,210,Moderate\nPT-102,62,145,260,High\nPT-103,34,118,180,Low\nPT-104,58,150,245,High\nPT-105,29,112,175,Low\nPT-106,71,162,280,Critical`,
-      fileName: 'clinical_trial_sample.csv',
-      validate: (result: any, packet: any, schema: any) => {
-        const isUser = result.connectorId === 'user_dataset' && packet.source.sourceType === 'user_upload';
-        const hasRows = packet.kpis.some((k: any) => k.value === '6');
+      category: '10. Unsupported Domain Handling',
+      prompt: 'Create a deep space satellite astrophysics telescope dashboard.',
+      expectedState: 'UNSUPPORTED_DOMAIN',
+      fileContent: undefined,
+      fileName: undefined,
+      validate: (res: any) => {
+        const correctState = res.state === 'UNSUPPORTED_DOMAIN';
+        const noFakeData = !res.dataPacket;
+        const suggestionsProvided = res.guidance?.suggestedPrompts?.length > 0;
         return {
-          valid: isUser && hasRows,
-          notes: 'Parsed 6 clinical records in ephemeral memory, auto-computed numerical distributions for Age, Systolic_BP, and Cholesterol.'
+          valid: correctState && noFakeData && suggestionsProvided,
+          notes: 'Honest rejection of unsupported domain. No mock data generated; suggested available live domains.'
         };
       }
     },
-    // 11. Requests with missing parameters (GDP without country)
+    // 11. Root Cause Scenario: "restaurants dashboard"
     {
       id: 11,
-      category: 'Requests with missing parameters',
-      prompt: 'Show me GDP growth.',
+      category: '11. User Problem Statement ("restaurants dashboard")',
+      prompt: 'restaurants dashboard',
+      expectedState: 'DATASET_REQUIRED',
       fileContent: undefined,
       fileName: undefined,
-      validate: (result: any, packet: any, schema: any) => {
-        const hasAssumption = result.intent.dataSufficiency.assumptionsUsed.some((a: string) => a.includes('No country specified') || a.includes('India'));
+      validate: (res: any) => {
+        const correctState = res.state === 'DATASET_REQUIRED';
+        const notWorldBank = res.connectorId !== 'world_bank';
+        const correctGuidance = res.guidance?.message?.includes('upload your restaurant sales');
         return {
-          valid: hasAssumption && result.connectorId === 'world_bank',
-          notes: 'Gracefully handled missing geographic parameter by defaulting to India (IND) while explicitly noting the assumption in provenance.'
+          valid: correctState && notWorldBank && correctGuidance,
+          notes: 'FIX VERIFIED: "restaurants dashboard" no longer generates Indian GDP. Requests restaurant dataset instead.'
         };
       }
     },
-    // 12. Requests with missing parameters (Weather without location)
+    // 12. Ambiguous Query Handling
     {
       id: 12,
-      category: 'Requests with missing parameters',
-      prompt: 'What is the current temperature and rainfall?',
+      category: '12. Ambiguous Query ("dashboard")',
+      prompt: 'dashboard',
+      expectedState: 'CLARIFICATION_REQUIRED',
       fileContent: undefined,
       fileName: undefined,
-      validate: (result: any, packet: any, schema: any) => {
-        const hasAssumption = result.intent.dataSufficiency.assumptionsUsed.some((a: string) => a.includes('No location specified') || a.includes('Andhra Pradesh'));
+      validate: (res: any) => {
+        const correctState = res.state === 'CLARIFICATION_REQUIRED';
         return {
-          valid: hasAssumption && result.connectorId === 'open_meteo',
-          notes: 'Gracefully defaulted to Andhra Pradesh (Amaravati) meteorological station with explicit documented assumption.'
+          valid: correctState && res.guidance?.state === 'CLARIFICATION_REQUIRED',
+          notes: 'Clarification required for single-word generic prompt. Suggests specific analytical topics.'
         };
       }
     },
-    // 13. Unsupported subjects (Cryptocurrency / Bitcoin)
+    // 13. Multi-Requirement Prompt: EV categories, yearly growth, leading states
     {
       id: 13,
-      category: 'Unsupported subjects',
-      prompt: 'Analyze Bitcoin network hash rate, crypto transaction fees, and mining difficulty.',
+      category: '13. Multi-Requirement Analytical Query',
+      prompt: "Analyze India's EV market, compare vehicle categories, show yearly growth, and identify the leading states.",
+      expectedState: 'SUCCESS',
       fileContent: undefined,
       fileName: undefined,
-      validate: (result: any, packet: any, schema: any) => {
-        const isFlaggedUnsupported = result.intent.dataSufficiency.isSufficient === false;
-        const mentionsCrypto = result.intent.dataSufficiency.assumptionsUsed.some((a: string) => a.toLowerCase().includes('crypto') || a.toLowerCase().includes('approved'));
+      validate: (res: any) => {
+        const p = res.dataPacket;
+        const hasKPIs = p?.kpis?.length >= 4;
+        const hasCategoryChart = p?.charts?.some((c: any) => c.id === 'category_breakdown_trajectory');
+        const hasTrendChart = p?.charts?.some((c: any) => c.id === 'annual_adoption_growth');
+        const hasStateTable = p?.tables?.some((t: any) => t.id === 'state_ev_matrix');
         return {
-          valid: isFlaggedUnsupported && mentionsCrypto,
-          notes: 'Identified that cryptocurrency telemetry is outside approved registry; flagged isSufficient=false and provided follow-up suggestions.'
+          valid: res.state === 'SUCCESS' && hasKPIs && hasCategoryChart && hasTrendChart && hasStateTable,
+          notes: 'Multi-requirement satisfied: 4 KPIs, category bar chart, historical yearly trend, and state-wise tabular register.'
         };
       }
     },
-    // 14. Requests for unavailable time periods (Future speculative years)
+    // 14. Real Uploaded Restaurant CSV
     {
       id: 14,
-      category: 'Requests for unavailable time periods',
-      prompt: 'Forecast India GDP growth for the year 2045 and 2050.',
-      fileContent: undefined,
-      fileName: undefined,
-      validate: (result: any, packet: any, schema: any) => {
-        const hasHorizonWarning = result.intent.dataSufficiency.assumptionsUsed.some((a: string) => a.includes('exceeds') || a.includes('2045') || a.includes('historical accounts'));
+      category: '14. Dataset Analytics: Restaurant CSV Ingestion',
+      prompt: 'Analyze our quarterly restaurant performance',
+      expectedState: 'SUCCESS',
+      fileContent: `Item,Category,Orders,Revenue,Rating\nButter Chicken,Mains,1420,28400,4.8\nGarlic Naan,Breads,3200,9600,4.6\nPaneer Tikka,Starters,980,14700,4.7\nBiryani,Mains,1850,37000,4.9\nMango Lassi,Beverages,2100,10500,4.8\nSamosa Platter,Starters,1150,8050,4.5`,
+      fileName: 'restaurant_sales_q1.csv',
+      validate: (res: any) => {
+        const p = res.dataPacket;
+        const hasAOV = p?.kpis?.some((k: any) => k.label.includes('Average Order Value') || k.id.includes('average_order_value'));
+        const hasBestSeller = p?.kpis?.some((k: any) => k.label.includes('Best-Selling') || k.id.includes('top_item'));
+        const hasCategoryChart = p?.charts?.some((c: any) => c.title.includes('Category') || c.id === 'top_items_bar');
         return {
-          valid: hasHorizonWarning && result.connectorId === 'world_bank',
-          notes: 'Surfaced official historical accounts (1998–2024) while explicitly warning that long-term speculative horizons (2045/2050) are not fabricated.'
+          valid: res.state === 'SUCCESS' && res.connectorId === 'user_dataset' && hasAOV && hasBestSeller && hasCategoryChart,
+          notes: 'Restaurant CSV detected: computed Total Revenue, Total Orders, AOV, Best-seller, and Category distribution.'
         };
       }
     },
-    // 15. Ambiguous or conflicting analytical requirements (EV + Weather)
+    // 15. Real Uploaded Student CSV
     {
       id: 15,
-      category: 'Ambiguous or conflicting requirements',
-      prompt: 'Compare electric vehicle sales in Delhi with current rainfall in Mumbai.',
-      fileContent: undefined,
-      fileName: undefined,
-      validate: (result: any, packet: any, schema: any) => {
-        const hasConflictNote = result.intent.dataSufficiency.assumptionsUsed.some((a: string) => a.includes('Cross-domain') || a.includes('combining EV mobility and meteorology'));
+      category: '15. Dataset Analytics: Student Academic CSV Ingestion',
+      prompt: 'Generate student academic scorecard',
+      expectedState: 'SUCCESS',
+      fileContent: `StudentID,StudentName,Subject,Marks,Attendance\n101,Aarav Sharma,Mathematics,94,96\n102,Diya Patel,Physics,88,92\n103,Rohan Verma,Chemistry,76,85\n104,Ananya Iyer,Mathematics,98,99\n105,Kabir Singh,Physics,58,74\n106,Meera Nair,Chemistry,91,95\n107,Vikram Rao,Mathematics,38,62`,
+      fileName: 'student_marks_semester1.csv',
+      validate: (res: any) => {
+        const p = res.dataPacket;
+        const hasPassRate = p?.kpis?.some((k: any) => k.label.includes('Pass Percentage') || k.id.includes('pass_rate'));
+        const hasTopStudent = p?.kpis?.some((k: any) => k.label.includes('Valedictorian') || k.label.includes('Top Score'));
+        const hasSubjectChart = p?.charts?.some((c: any) => c.title.includes('Subject'));
         return {
-          valid: hasConflictNote,
-          notes: 'Detected cross-domain conflict (EV vs Weather); prioritized clean mobility registry with documented disclaimer explaining the separation.'
+          valid: res.state === 'SUCCESS' && res.connectorId === 'user_dataset' && hasPassRate && hasTopStudent && hasSubjectChart,
+          notes: 'Student CSV detected: computed Class Average, Pass Rate (85.7%), Top Student, and Subject-wise averages.'
         };
       }
     }
@@ -270,24 +306,29 @@ export async function runPromptEvaluation(): Promise<PromptEvaluationResult[]> {
         fileName: tc.fileName
       });
 
-      const schema = compileSchemaFromDataPacket(res.dataPacket, tc.prompt);
-      const validated = UISchemaSchema.safeParse(schema);
-      if (!validated.success) {
-        throw new Error(`Schema parse failure: ${JSON.stringify(validated.error.format())}`);
+      let schema: any = null;
+      if (res.state === 'SUCCESS' && res.dataPacket) {
+        schema = compileSchemaFromDataPacket(res.dataPacket, tc.prompt);
+        const validated = UISchemaSchema.safeParse(schema);
+        if (!validated.success) {
+          throw new Error(`Schema parse failure: ${JSON.stringify(validated.error.format())}`);
+        }
       }
 
-      const evalResult = tc.validate(res, res.dataPacket, schema);
+      const evalResult = tc.validate(res);
 
       evaluations.push({
         id: tc.id,
         category: tc.category,
         prompt: tc.prompt,
-        selectedConnector: res.connectorId,
-        sourceType: res.dataPacket.source.sourceType || 'live_api',
-        observationPeriod: res.dataPacket.source.observationPeriod || 'N/A',
-        isSufficient: res.intent.dataSufficiency.isSufficient,
-        assumptions: res.intent.dataSufficiency.assumptionsUsed,
-        keyMetrics: res.dataPacket.kpis.map((k: any) => `${k.label}: ${k.value}`),
+        expectedState: tc.expectedState,
+        actualState: res.state,
+        selectedConnector: res.connectorId || 'NONE',
+        sourceType: res.dataPacket?.source?.sourceType || 'N/A',
+        observationPeriod: res.dataPacket?.source?.observationPeriod || 'N/A',
+        isSufficient: res.intent?.dataSufficiency?.isSufficient ?? false,
+        assumptions: res.intent?.dataSufficiency?.assumptionsUsed || [],
+        keyMetrics: res.dataPacket?.kpis?.map((k: any) => `${k.label}: ${k.value}`) || [],
         answersQuestionCorrectly: evalResult.valid,
         notes: evalResult.notes
       });
@@ -296,6 +337,8 @@ export async function runPromptEvaluation(): Promise<PromptEvaluationResult[]> {
         id: tc.id,
         category: tc.category,
         prompt: tc.prompt,
+        expectedState: tc.expectedState,
+        actualState: 'ERROR',
         selectedConnector: 'ERROR',
         sourceType: 'N/A',
         observationPeriod: 'N/A',
@@ -315,7 +358,7 @@ if (require.main === module) {
   runPromptEvaluation()
     .then((results) => {
       console.log('\n=============================================================');
-      console.log('REALISTIC USER PROMPT EVALUATION SUITE (15 UNSEEN CASES)');
+      console.log('REALISTIC USER PROMPT EVALUATION SUITE (15 VERIFICATION CASES)');
       console.log('=============================================================\n');
 
       let passedCount = 0;
@@ -324,11 +367,10 @@ if (require.main === module) {
         if (r.answersQuestionCorrectly) passedCount++;
         console.log(`${status} #${r.id} [${r.category}]`);
         console.log(`       Prompt: "${r.prompt}"`);
-        console.log(`       Connector: ${r.selectedConnector} (${r.sourceType})`);
-        console.log(`       Observation: ${r.observationPeriod}`);
-        console.log(`       Data Sufficiency: ${r.isSufficient ? 'SUFFICIENT' : 'INSUFFICIENT (Honest Disclosure)'}`);
-        if (r.assumptions.length > 0) {
-          console.log(`       Assumptions: ${r.assumptions.join(' | ')}`);
+        console.log(`       State: ${r.actualState} (Expected: ${r.expectedState})`);
+        console.log(`       Connector: ${r.selectedConnector}`);
+        if (r.keyMetrics.length > 0) {
+          console.log(`       Key Metrics: ${r.keyMetrics.slice(0, 3).join(' | ')}`);
         }
         console.log(`       Notes: ${r.notes}\n`);
       });

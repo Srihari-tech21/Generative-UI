@@ -1,0 +1,16 @@
+employee_id,full_name,department,role,projects_completed,efficiency_score,satisfaction_rating,annual_salary
+EMP-001,Aditi Rao,Engineering,Staff Engineer,14,4.8,4.9,145000
+EMP-002,Karan Singhal,Engineering,Backend Developer,11,4.5,4.6,112000
+EMP-003,Sneha Deshmukh,Marketing,Growth Lead,9,4.6,4.7,98000
+EMP-004,Vivek Nambiar,Sales,Enterprise Account Exec,18,4.9,4.8,125000
+EMP-005,Ritu Agarwal,Product,Senior PM,8,4.4,4.5,130000
+EMP-006,Manish Chawla,Engineering,DevOps Lead,12,4.7,4.8,138000
+EMP-007,Pooja Hegde,Customer Success,CS Manager,22,4.8,4.9,89000
+EMP-008,Suresh Iyer,Finance,Financial Analyst,7,4.3,4.4,92000
+EMP-009,Divya Sen,Engineering,Frontend Engineer,10,4.6,4.7,105000
+EMP-010,Tarun Mittal,Sales,Account Executive,15,4.7,4.6,96000
+EMP-011,Anjali Pillai,Human Resources,Talent Partner,8,4.5,4.8,84000
+EMP-012,Rajesh Goud,Operations,Facilities Manager,6,4.2,4.3,78000
+EMP-013,Farhan Siddiqui,Engineering,QA Architect,13,4.6,4.5,118000
+EMP-014,Kavita Biswas,Marketing,Content Strategist,11,4.5,4.6,82000
+EMP-015,Abhinav Verma,Product,UI/UX Designer,9,4.7,4.9,102000

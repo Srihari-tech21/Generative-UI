@@ -1,0 +1,16 @@
+transaction_id,customer_id,store_location,channel,items_count,transaction_value,discount_applied,net_paid,payment_type,transaction_date
+TXN-9001,CUST-412,Downtown Flagship,In-Store,3,145.00,14.50,130.50,Credit Card,2025-02-01
+TXN-9002,CUST-789,Westside Mall,In-Store,1,85.00,0.00,85.00,UPI / Digital,2025-02-01
+TXN-9003,CUST-234,Online Web,E-Commerce,4,220.00,33.00,187.00,Credit Card,2025-02-01
+TXN-9004,CUST-561,Suburban Hub,In-Store,2,64.00,6.40,57.60,Cash,2025-02-02
+TXN-9005,CUST-892,Mobile App,E-Commerce,5,310.00,46.50,263.50,Debit Card,2025-02-02
+TXN-9006,CUST-104,Downtown Flagship,In-Store,2,95.00,9.50,85.50,Credit Card,2025-02-02
+TXN-9007,CUST-673,Online Web,E-Commerce,3,175.00,17.50,157.50,Credit Card,2025-02-03
+TXN-9008,CUST-318,Westside Mall,In-Store,1,45.00,0.00,45.00,Cash,2025-02-03
+TXN-9009,CUST-945,Mobile App,E-Commerce,6,420.00,84.00,336.00,UPI / Digital,2025-02-03
+TXN-9010,CUST-421,Downtown Flagship,In-Store,4,210.00,21.00,189.00,Credit Card,2025-02-04
+TXN-9011,CUST-156,Suburban Hub,In-Store,2,78.00,7.80,70.20,Debit Card,2025-02-04
+TXN-9012,CUST-723,Online Web,E-Commerce,3,135.00,13.50,121.50,Credit Card,2025-02-04
+TXN-9013,CUST-881,Mobile App,E-Commerce,2,110.00,11.00,99.00,UPI / Digital,2025-02-05
+TXN-9014,CUST-390,Westside Mall,In-Store,5,260.00,26.00,234.00,Credit Card,2025-02-05
+TXN-9015,CUST-502,Downtown Flagship,In-Store,1,55.00,0.00,55.00,Cash,2025-02-05

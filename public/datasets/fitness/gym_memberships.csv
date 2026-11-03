@@ -1,0 +1,16 @@
+member_id,member_name,plan_type,monthly_fee,joined_date,status,visits_this_month,trainer_assigned
+MEM-201,Karan Johar,Gold Annual,65.00,2024-03-15,Active,16,Yes
+MEM-202,Simran Kaur,Silver Monthly,45.00,2024-06-10,Active,11,No
+MEM-203,Alex Johnson,Platinum All-Access,95.00,2024-01-20,Active,22,Yes
+MEM-204,Divya Aggarwal,Silver Monthly,45.00,2024-08-05,Active,8,No
+MEM-205,Marcus Brody,Student Pass,30.00,2024-09-01,Active,14,No
+MEM-206,Pooja Hegde,Gold Annual,65.00,2024-04-12,Active,18,Yes
+MEM-207,Rohan Mehra,Silver Monthly,45.00,2024-07-22,Paused,2,No
+MEM-208,Elena Vasquez,Platinum All-Access,95.00,2024-02-18,Active,19,Yes
+MEM-209,Vikram Seth,Gold Annual,65.00,2024-05-30,Active,15,No
+MEM-210,Sarah Connor,Platinum All-Access,95.00,2024-01-10,Active,24,Yes
+MEM-211,Amitabh Sengupta,Silver Monthly,45.00,2024-10-15,Cancelled,0,No
+MEM-212,Neha Sharma,Gold Annual,65.00,2024-04-01,Active,17,Yes
+MEM-213,Gaurav Chopra,Student Pass,30.00,2024-09-15,Active,12,No
+MEM-214,Tara Sutaria,Platinum All-Access,95.00,2024-03-25,Active,20,Yes
+MEM-215,Naveen Jindal,Silver Monthly,45.00,2024-08-18,Active,9,No

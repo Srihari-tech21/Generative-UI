@@ -1,0 +1,11 @@
+district,state,year,annual_rainfall_mm,normal_rainfall_mm,rainfall_deviation_pct,major_crop,crop_yield_tons_per_ha
+Ludhiana,Punjab,2024,680,720,-5.6,Wheat,5.2
+Karnal,Haryana,2024,710,750,-5.3,Rice,3.8
+Indore,Madhya Pradesh,2024,1020,950,7.4,Soybean,1.4
+Nagpur,Maharashtra,2024,1150,1080,6.5,Cotton,0.5
+Rajkot,Gujarat,2024,780,620,25.8,Groundnut,2.3
+Dharwad,Karnataka,2024,840,790,6.3,Maize,3.5
+Guntur,Andhra Pradesh,2024,960,890,7.9,Chilli,2.8
+Burdwan,West Bengal,2024,1420,1380,2.9,Rice,4.1
+Kota,Rajasthan,2024,820,740,10.8,Mustard,1.7
+Thanjavur,Tamil Nadu,2024,1180,1110,6.3,Rice,4.3

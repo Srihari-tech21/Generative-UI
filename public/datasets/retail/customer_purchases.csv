@@ -1,0 +1,16 @@
+customer_id,segment,total_orders,lifetime_spend,avg_basket_value,last_purchase_days_ago,loyalty_tier
+CUST-101,VIP High Value,24,3480.00,145.00,4,Platinum
+CUST-102,Regular Consumer,11,968.00,88.00,12,Gold
+CUST-103,Bargain Seeker,6,288.00,48.00,28,Silver
+CUST-104,VIP High Value,31,4960.00,160.00,2,Platinum
+CUST-105,Occasional Buyer,4,312.00,78.00,45,Bronze
+CUST-106,Regular Consumer,15,1425.00,95.00,8,Gold
+CUST-107,VIP High Value,19,2945.00,155.00,6,Platinum
+CUST-108,Bargain Seeker,8,360.00,45.00,19,Silver
+CUST-109,Regular Consumer,12,1104.00,92.00,14,Gold
+CUST-110,Occasional Buyer,3,195.00,65.00,60,Bronze
+CUST-111,VIP High Value,28,4480.00,160.00,3,Platinum
+CUST-112,Regular Consumer,9,738.00,82.00,16,Gold
+CUST-113,Bargain Seeker,5,235.00,47.00,33,Silver
+CUST-114,Regular Consumer,14,1288.00,92.00,9,Gold
+CUST-115,Occasional Buyer,2,140.00,70.00,75,Bronze

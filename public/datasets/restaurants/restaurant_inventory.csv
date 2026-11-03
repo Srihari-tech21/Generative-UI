@@ -1,0 +1,16 @@
+ingredient_id,ingredient_name,category,current_stock,unit,reorder_level,unit_cost,total_value,supplier
+ING-01,Basmati Rice,Grains,240,kg,80,1.80,432.00,Apex Agro Mills
+ING-02,Boneless Chicken,Poultry,95,kg,40,4.50,427.50,Sunrise Poultry Co
+ING-03,Paneer (Cottage Cheese),Dairy,60,kg,25,3.80,228.00,Amul Fresh Dairy
+ING-04,Cooking Oil,Oils,120,liters,45,2.10,252.00,National Edibles
+ING-05,Onions,Produce,180,kg,60,0.70,126.00,Metro Mandi Wholesale
+ING-06,Tomatoes,Produce,140,kg,50,0.85,119.00,Metro Mandi Wholesale
+ING-07,Garam Masala Blend,Spices,35,kg,12,8.50,297.50,Kerala Spice Hub
+ING-08,Fresh Cream,Dairy,48,liters,20,3.20,153.60,Amul Fresh Dairy
+ING-09,Flour (Maida),Grains,160,kg,50,0.95,152.00,Apex Agro Mills
+ING-10,Whole Milk,Dairy,110,liters,40,1.10,121.00,City Dairy Supply
+ING-11,Mutton Cuts,Meat,42,kg,20,7.50,315.00,Heritage Farms
+ING-12,Garlic,Produce,30,kg,15,2.40,72.00,Metro Mandi Wholesale
+ING-13,Ginger,Produce,25,kg,12,2.60,65.00,Metro Mandi Wholesale
+ING-14,Yogurt,Dairy,75,kg,30,1.40,105.00,City Dairy Supply
+ING-15,Cardamom & Cloves,Spices,18,kg,8,14.00,252.00,Kerala Spice Hub

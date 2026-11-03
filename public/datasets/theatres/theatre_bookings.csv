@@ -1,0 +1,16 @@
+booking_id,movie_title,screen_number,show_time,tickets_booked,ticket_price,total_booking_amount,payment_status,booking_date
+BKG-201,Interstellar Odyssey,Audi 1,18:30,4,14.50,58.00,Confirmed,2025-02-01
+BKG-202,Echoes of the Past,Audi 2,15:00,2,11.00,22.00,Confirmed,2025-02-01
+BKG-203,Neon Cyberpunk 2099,Audi 3,21:15,5,16.00,80.00,Confirmed,2025-02-01
+BKG-204,The Royal Dynasty,Audi 4,14:00,3,12.50,37.50,Confirmed,2025-02-02
+BKG-205,Interstellar Odyssey,Audi 1,21:45,6,15.50,93.00,Confirmed,2025-02-02
+BKG-206,Wild Frontier,Audi 2,17:30,2,10.00,20.00,Confirmed,2025-02-02
+BKG-207,Neon Cyberpunk 2099,Audi 3,18:00,4,16.00,64.00,Confirmed,2025-02-03
+BKG-208,The Royal Dynasty,Audi 4,19:30,5,13.00,65.00,Confirmed,2025-02-03
+BKG-209,Interstellar Odyssey,Audi 1,14:15,3,13.50,40.50,Confirmed,2025-02-03
+BKG-210,Echoes of the Past,Audi 2,20:45,4,12.00,48.00,Confirmed,2025-02-04
+BKG-211,Neon Cyberpunk 2099,Audi 3,21:30,6,16.00,96.00,Confirmed,2025-02-04
+BKG-212,Wild Frontier,Audi 2,14:30,3,10.00,30.00,Confirmed,2025-02-04
+BKG-213,Interstellar Odyssey,Audi 1,18:30,5,15.00,75.00,Confirmed,2025-02-05
+BKG-214,The Royal Dynasty,Audi 4,16:00,4,12.50,50.00,Confirmed,2025-02-05
+BKG-215,Echoes of the Past,Audi 2,18:00,2,11.50,23.00,Confirmed,2025-02-05

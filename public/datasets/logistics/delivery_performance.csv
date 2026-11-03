@@ -1,0 +1,16 @@
+delivery_id,order_id,destination_city,carrier,promised_hours,actual_hours,delivery_status,on_time_flag,delivery_cost
+DEL-301,ORD-9801,Mumbai,ExpressCargo,24,21.5,Delivered,Yes,14.50
+DEL-302,ORD-9802,Delhi,NationalFreight,48,44.0,Delivered,Yes,18.00
+DEL-303,ORD-9803,Bengaluru,SwiftLogix,24,27.0,Delayed,No,16.20
+DEL-304,ORD-9804,Hyderabad,ExpressCargo,36,32.0,Delivered,Yes,15.00
+DEL-305,ORD-9805,Chennai,BlueDart Pro,24,22.0,Delivered,Yes,17.50
+DEL-306,ORD-9806,Kolkata,NationalFreight,72,68.5,Delivered,Yes,22.00
+DEL-307,ORD-9807,Pune,SwiftLogix,24,23.0,Delivered,Yes,13.80
+DEL-308,ORD-9808,Ahmedabad,ExpressCargo,36,41.0,Delayed,No,16.00
+DEL-309,ORD-9809,Jaipur,BlueDart Pro,48,45.0,Delivered,Yes,19.20
+DEL-310,ORD-9810,Lucknow,NationalFreight,48,46.5,Delivered,Yes,18.50
+DEL-311,ORD-9811,Bengaluru,ExpressCargo,24,20.0,Delivered,Yes,14.00
+DEL-312,ORD-9812,Surat,SwiftLogix,24,28.5,Delayed,No,15.50
+DEL-313,ORD-9813,Kochi,BlueDart Pro,48,43.0,Delivered,Yes,21.00
+DEL-314,ORD-9814,Chandigarh,ExpressCargo,36,33.0,Delivered,Yes,17.00
+DEL-315,ORD-9815,Indore,NationalFreight,36,34.0,Delivered,Yes,16.50

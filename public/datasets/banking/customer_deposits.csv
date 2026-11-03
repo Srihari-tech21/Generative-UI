@@ -1,0 +1,13 @@
+deposit_id,branch,deposit_type,deposit_amount,annual_yield_pct,maturity_months,customer_segment
+DEP-401,Downtown Financial Center,Fixed Deposit,50000,7.10,24,Premier
+DEP-402,Suburban Plaza Branch,Recurring Deposit,12000,6.75,12,Retail
+DEP-403,Commercial Hub Metro,Corporate Term Deposit,500000,7.45,36,Corporate
+DEP-404,Tech City Branch,High-Yield Savings,85000,5.25,0,Wealth
+DEP-405,Downtown Financial Center,Fixed Deposit,100000,7.20,36,Premier
+DEP-406,Airport Road Branch,Certificate of Deposit,25000,6.90,18,Retail
+DEP-407,Suburban Plaza Branch,Fixed Deposit,40000,7.00,24,Retail
+DEP-408,Commercial Hub Metro,Corporate Term Deposit,850000,7.60,48,Corporate
+DEP-409,Downtown Financial Center,Fixed Deposit,75000,7.15,24,Premier
+DEP-410,Tech City Branch,High-Yield Savings,120000,5.25,0,Wealth
+DEP-411,Airport Road Branch,Recurring Deposit,18000,6.80,12,Retail
+DEP-412,Suburban Plaza Branch,Fixed Deposit,30000,7.00,12,Retail

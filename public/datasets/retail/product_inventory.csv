@@ -1,0 +1,16 @@
+sku,product_name,category,stock_on_hand,safety_stock,unit_cost,retail_price,inventory_value,stock_status
+SKU-101,Classic Cotton Crew T-Shirt,Apparel,420,100,8.50,24.00,3570.00,In Stock
+SKU-102,Slim-Fit Denim Jeans,Apparel,180,60,18.00,59.00,3240.00,In Stock
+SKU-103,Wireless ANC Headphones,Electronics,75,30,42.00,119.00,3150.00,In Stock
+SKU-104,Running Performance Shoes,Footwear,110,40,32.00,89.00,3520.00,In Stock
+SKU-105,Smart Fitness Tracker V2,Electronics,90,35,28.00,79.00,2520.00,In Stock
+SKU-106,Waterproof Trekking Backpack,Accessories,140,45,16.50,49.00,2310.00,In Stock
+SKU-107,Polarized Polar Sunglasses,Accessories,210,50,9.00,29.00,1890.00,In Stock
+SKU-108,Stainless Steel Thermal Flask,Home & Kitchen,260,70,7.20,22.00,1872.00,In Stock
+SKU-109,Ceramic Coffee Mug 4-Pack,Home & Kitchen,130,40,6.00,19.00,780.00,In Stock
+SKU-110,Ergonomic Memory Foam Pillow,Home & Kitchen,85,30,14.00,39.00,1190.00,In Stock
+SKU-111,Leather Bifold Wallet,Accessories,165,45,11.00,34.00,1815.00,In Stock
+SKU-112,Mechanical Gaming Keyboard,Electronics,45,25,38.00,99.00,1710.00,Low Stock
+SKU-113,Yoga Mat Anti-Slip 6mm,Fitness,190,50,10.50,29.00,1995.00,In Stock
+SKU-114,Fleece Winter Zip Hoodie,Apparel,60,40,19.00,55.00,1140.00,Low Stock
+SKU-115,Canvas Sneaker Low-Top,Footwear,135,40,21.00,59.00,2835.00,In Stock

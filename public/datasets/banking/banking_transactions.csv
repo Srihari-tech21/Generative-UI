@@ -1,0 +1,16 @@
+transaction_id,account_type,transaction_type,amount,fee,channel,status,transaction_time
+TXN-101,Savings Account,UPI Transfer,250.00,0.00,Mobile Banking,Success,2025-02-01 09:14
+TXN-102,Checking Account,Wire Transfer,4800.00,15.00,Net Banking,Success,2025-02-01 10:22
+TXN-103,Credit Card,POS Swipe,89.50,0.00,Merchant POS,Success,2025-02-01 11:45
+TXN-104,Savings Account,ATM Withdrawal,200.00,2.50,Branch ATM,Success,2025-02-01 12:30
+TXN-105,Corporate Account,NEFT Batch,38500.00,25.00,Net Banking,Success,2025-02-02 09:50
+TXN-106,Checking Account,Direct Debit EMI,640.00,0.00,Auto Debit,Success,2025-02-02 11:00
+TXN-107,Credit Card,Online Purchase,145.00,0.00,E-Commerce,Success,2025-02-02 14:15
+TXN-108,Savings Account,UPI Transfer,120.00,0.00,Mobile Banking,Success,2025-02-02 17:30
+TXN-109,Corporate Account,RTGS Salary Payout,84200.00,30.00,Net Banking,Success,2025-02-03 10:10
+TXN-110,Checking Account,Cheque Deposit,2400.00,0.00,Branch Counter,Clearing,2025-02-03 12:00
+TXN-111,Credit Card,International POS,320.00,9.60,Merchant POS,Success,2025-02-03 16:40
+TXN-112,Savings Account,Bill Payment,78.50,0.00,Mobile Banking,Success,2025-02-04 08:30
+TXN-113,Savings Account,ATM Withdrawal,300.00,2.50,Branch ATM,Success,2025-02-04 13:15
+TXN-114,Checking Account,Wire Transfer,12500.00,20.00,Net Banking,Success,2025-02-04 15:45
+TXN-115,Credit Card,Online Purchase,68.00,0.00,E-Commerce,Success,2025-02-05 18:20

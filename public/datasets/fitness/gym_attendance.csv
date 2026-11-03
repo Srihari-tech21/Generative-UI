@@ -1,0 +1,16 @@
+log_id,member_id,check_in_time,check_out_time,duration_minutes,facility_area,day_of_week
+LOG-901,MEM-203,06:30,07:45,75,Weight Training,Monday
+LOG-902,MEM-210,06:45,08:00,75,Cardio Zone,Monday
+LOG-903,MEM-201,07:00,08:15,75,CrossFit Arena,Monday
+LOG-904,MEM-206,07:15,08:15,60,Yoga Studio,Monday
+LOG-905,MEM-214,17:30,18:45,75,Weight Training,Monday
+LOG-906,MEM-208,18:00,19:15,75,Functional Fitness,Monday
+LOG-907,MEM-205,18:15,19:30,75,Weight Training,Monday
+LOG-908,MEM-202,07:30,08:30,60,Cardio Zone,Tuesday
+LOG-909,MEM-209,08:00,09:15,75,Weight Training,Tuesday
+LOG-910,MEM-212,17:45,19:00,75,CrossFit Arena,Tuesday
+LOG-911,MEM-203,18:30,19:45,75,Weight Training,Tuesday
+LOG-912,MEM-210,06:30,07:30,60,Cardio Zone,Wednesday
+LOG-913,MEM-201,07:00,08:15,75,Weight Training,Wednesday
+LOG-914,MEM-214,18:00,19:00,60,Swimming Pool,Wednesday
+LOG-915,MEM-206,18:15,19:30,75,Weight Training,Wednesday

@@ -1,0 +1,9 @@
+course_id,course_title,department,capacity,enrolled_students,completion_rate_pct,credits,instructor
+CRS-101,Intro to Data Structures,Computer Science,120,118,92.4,4,Dr. Alan Turing
+CRS-102,Linear Algebra & Matrices,Mathematics,90,86,88.4,3,Dr. Katherine Johnson
+CRS-103,Quantum Mechanics I,Physics,60,54,81.5,4,Dr. Richard Feynman
+CRS-104,Organic Chemistry Principles,Chemistry,75,71,85.9,4,Dr. Marie Curie
+CRS-105,Microeconomic Theory,Economics,100,95,90.5,3,Dr. Amartya Sen
+CRS-106,World History 1900-2000,History,80,76,94.7,3,Dr. Eric Hobsbawm
+CRS-107,Artificial Intelligence & ML,Computer Science,120,120,95.0,4,Dr. Geoffrey Hinton
+CRS-108,Molecular Cell Biology,Biology,70,68,89.7,4,Dr. Rosalind Franklin
