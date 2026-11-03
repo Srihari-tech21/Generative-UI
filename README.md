@@ -120,7 +120,12 @@ OPENWEATHER_API_KEY=
 ```bash
 npm run dev
 ```
+<<<<<<< HEAD
 Open [http://localhost:3000](http://localhost:3000) in your browser.
+=======
+
+Open [https://generative-ui-orpin.vercel.app/](https://generative-ui-orpin.vercel.app/) in your browser.
+>>>>>>> 2fedb0a98d9e14d49561f7028b372544ff082796
 
 ### 5. Run Verification & Lint Checks
 ```bash
